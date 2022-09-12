@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @hall %>
+
+<div>
+  <%= link_to "Edit this hall", edit_hall_path(@hall) %> |
+  <%= link_to "Back to halls", halls_path %>
+
+  <%= button_to "Destroy this hall", @hall, method: :delete %>
+</div>
