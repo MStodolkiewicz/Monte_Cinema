@@ -10,15 +10,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_09_111635) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_12_103735) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "halls", force: :cascade do |t|
-    t.integer "number"
     t.integer "capacity"
+    t.integer "number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
+  create_table "movies", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.integer "duration"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "seances", force: :cascade do |t|
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.float "price"
+    t.bigint "hall_id", null: false
+    t.bigint "movie_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["hall_id"], name: "index_seances_on_hall_id"
+    t.index ["movie_id"], name: "index_seances_on_movie_id"
+  end
+
+  add_foreign_key "seances", "halls"
+  add_foreign_key "seances", "movies"
 end
