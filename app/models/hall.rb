@@ -1,5 +1,5 @@
 class Hall < ApplicationRecord
-    has_many :seances
+    has_many :seances, dependent: :destroy
 
     validates :capacity, :number, presence: true 
     validates :capacity, :number, numericality: {only_integer: true, greater_than: 0 }
