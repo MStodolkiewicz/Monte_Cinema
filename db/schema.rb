@@ -16,7 +16,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_12_103735) do
 
   create_table "halls", force: :cascade do |t|
     t.integer "capacity"
-    t.integer "number"
+    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

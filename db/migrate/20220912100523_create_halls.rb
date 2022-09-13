@@ -2,7 +2,7 @@ class CreateHalls < ActiveRecord::Migration[7.0]
   def change
     create_table :halls do |t|
       t.integer :capacity
-      t.integer :number
+      t.string :name
 
       t.timestamps
     end
