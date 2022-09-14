@@ -19,13 +19,17 @@ class Seance < ApplicationRecord
   private
 
   def used?
-    unless Seance.where(hall_id: hall_id)
+    return if scence_within_given_time_and_hall_exist?
+    errors.add(:start_time, "Hall is used for another seance")
+  end
+  
+  def scence_within_given_time_and_hall_exist?
+    Seance
+      .where(hall_id:)
       .where(end_time: start_time..end_time)
-      .or(Seance.where(hall_id: hall_id)
+      .or(Seance.where(hall_id:)
       .where(start_time: start_time..end_time))
       .empty?
-      errors.add(:start_time, "Hall is used for another seance")
-    end
   end
   
 end
