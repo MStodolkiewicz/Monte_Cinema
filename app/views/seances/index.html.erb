@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Seances</h1>
+
+<div id="seances">
+  <% @seances.each do |seance| %>
+    <%= render seance %>
+    <p>
+      <%= link_to "Show this seance", seance %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New seance", new_seance_path %>
