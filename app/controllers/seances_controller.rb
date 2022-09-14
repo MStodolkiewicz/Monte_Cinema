@@ -1,5 +1,5 @@
 class SeancesController < ApplicationController
-  before_action :set_seance, only: %i[ show edit update destroy ]
+  before_action :set_seance, only: %i[show edit update destroy]
 
   # GET /seances or /seances.json
   def index
@@ -7,8 +7,7 @@ class SeancesController < ApplicationController
   end
 
   # GET /seances/1 or /seances/1.json
-  def show
-  end
+  def show; end
 
   # GET /seances/new
   def new
@@ -16,8 +15,7 @@ class SeancesController < ApplicationController
   end
 
   # GET /seances/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /seances or /seances.json
   def create
@@ -58,13 +56,14 @@ class SeancesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_seance
-      @seance = Seance.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def seance_params
-      params.require(:seance).permit(:start_time, :price, :hall_id, :movie_id)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_seance
+    @seance = Seance.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def seance_params
+    params.require(:seance).permit(:start_time, :price, :hall_id, :movie_id)
+  end
 end

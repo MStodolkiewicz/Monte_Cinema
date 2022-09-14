@@ -1,5 +1,5 @@
 class HallsController < ApplicationController
-  before_action :set_hall, only: %i[ show edit update destroy ]
+  before_action :set_hall, only: %i[show edit update destroy]
 
   # GET /halls or /halls.json
   def index
@@ -7,8 +7,7 @@ class HallsController < ApplicationController
   end
 
   # GET /halls/1 or /halls/1.json
-  def show
-  end
+  def show; end
 
   # GET /halls/new
   def new
@@ -16,8 +15,7 @@ class HallsController < ApplicationController
   end
 
   # GET /halls/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /halls or /halls.json
   def create
@@ -58,13 +56,14 @@ class HallsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_hall
-      @hall = Hall.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def hall_params
-      params.require(:hall).permit(:capacity, :name)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_hall
+    @hall = Hall.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def hall_params
+    params.require(:hall).permit(:capacity, :name)
+  end
 end

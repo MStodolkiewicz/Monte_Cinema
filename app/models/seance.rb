@@ -15,14 +15,15 @@ class Seance < ApplicationRecord
   validates :start_time, :price, :end_time, presence: true
   validates :end_time, comparison: { greater_than: :start_time }
   validates :price, numericality: { greater_than: 0 }
-  
+
   private
 
   def used?
     return if scence_within_given_time_and_hall_exist?
+
     errors.add(:start_time, "Hall is used for another seance")
   end
-  
+
   def scence_within_given_time_and_hall_exist?
     Seance
       .where(hall_id:)
@@ -31,5 +32,4 @@ class Seance < ApplicationRecord
       .where(start_time: start_time..end_time))
       .empty?
   end
-  
 end
