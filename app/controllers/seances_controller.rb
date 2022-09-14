@@ -65,6 +65,6 @@ class SeancesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def seance_params
-      params.require(:seance).permit(:start_time, :end_time, :price, :hall_id, :movie_id)
+      params.require(:seance).permit(:start_time, :price, :hall_id, :movie_id)
     end
 end
