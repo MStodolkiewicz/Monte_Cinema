@@ -15,24 +15,24 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_12_103735) do
   enable_extension "plpgsql"
 
   create_table "halls", force: :cascade do |t|
-    t.integer "capacity"
-    t.string "name"
+    t.integer "capacity", null: false
+    t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "movies", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.text "description"
-    t.integer "duration"
+    t.integer "duration", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "seances", force: :cascade do |t|
-    t.datetime "start_time"
-    t.datetime "end_time"
-    t.float "price"
+    t.datetime "start_time", null: false
+    t.datetime "end_time", null: false
+    t.float "price", null: false
     t.bigint "hall_id", null: false
     t.bigint "movie_id", null: false
     t.datetime "created_at", null: false
