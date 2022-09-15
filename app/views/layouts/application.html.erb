@@ -9,9 +9,19 @@
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
     <%= stylesheet_link_tag "application" %>
+
+    
   </head>
   
   <body>
-    <%= yield %>
+    <div class="container-fluid">
+      <nav class="navbar sticky-top bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/movies" style="position: relative; left: 45%">MonteCinema!</a>
+        </div>
+      </nav>
+
+      <%= yield %>
+    </div>
   </body>
 </html>

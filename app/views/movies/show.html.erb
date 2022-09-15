@@ -1,10 +1,12 @@
 <p style="color: green"><%= notice %></p>
+  <div style="margin-left:40%;"> 
+    <%= render @movie %>
+  </div>
 
-<%= render @movie %>
-
-<div>
-  <%= link_to "Edit this movie", edit_movie_path(@movie) %> |
-  <%= link_to "Back to movies", movies_path %>
-
-  <%= button_to "Destroy this movie", @movie, method: :delete %>
-</div>
+  <div> 
+    <% @seances.each do |seance| %>
+    <div class="border border-dark" style="float:left; margin-right: 2%; margin-bottom:2%; width: 15%;">
+        <%= render seance %>
+    </div>
+  <% end %>
+  </div>
