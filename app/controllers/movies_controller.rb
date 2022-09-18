@@ -10,8 +10,8 @@ class MoviesController < ApplicationController
   def show
     @seances = Seance
                .where(movie_id: params[:id])
-               .where(start_time: DateTime.current + 30.minutes..)
-               .order(:start_time)
+               .where(start_time: 30.minutes.from_now..7.days.from_now)
+               .order(start_time: :asc)
   end
 
   # GET /movies/new
