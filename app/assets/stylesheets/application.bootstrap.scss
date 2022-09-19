@@ -1,2 +1,24 @@
 @import 'bootstrap/scss/bootstrap';
 @import 'bootstrap-icons/font/bootstrap-icons';
+
+a:link {
+    text-decoration: none!important;  
+    color: black;
+  }
+  
+  a:visited {
+    text-decoration: none!important; 
+    color: black;
+  }
+  
+  a:hover {
+    text-decoration: none!important;
+    color: black;
+  }
+  
+  a:active {
+    text-decoration: none!important; 
+    color: black;
+  }
+
+  
