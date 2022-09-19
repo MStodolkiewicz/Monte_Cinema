@@ -19,8 +19,8 @@ end
 
 500.times do
     Seance.create(
-        movie_id: rand(10) + 1,
-        hall_id: rand(10) + 1,
+        movie_id: Movie.all.sample.id,
+        hall_id: Hall.all.sample.id,
         start_time: rand(14).days.from_now + rand(24).hours + rand(60).minutes,
         price: rand(10) + 15
     )
