@@ -1,68 +1,27 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
-#   Character.create(name: "Luke", movie: movies.first)
-h1 = Hall.create(name: 'Hall 1', capacity: 20)
-h2 = Hall.create(name: 'Hall 2', capacity: 50)
-h3 = Hall.create(name: 'Hall 3', capacity: 50)
-h4 = Hall.create(name: 'Hall 4', capacity: 50)
-h5 = Hall.create(name: 'Hall 5', capacity: 50)
-h6 = Hall.create(name: 'Hall 6', capacity: 100)
-h7 = Hall.create(name: 'Hall 7', capacity: 100)
-h8 = Hall.create(name: 'Hall 8', capacity: 100)
-h9 = Hall.create(name: 'Hall 9', capacity: 100)
-h10 = Hall.create(name: 'Hall 10', capacity: 200)
+Hall.create(name: 'Hall 1', capacity: 20)
+Hall.create(name: 'Hall 2', capacity: 50)
+Hall.create(name: 'Hall 3', capacity: 50)
+Hall.create(name: 'Hall 4', capacity: 50)
+Hall.create(name: 'Hall 5', capacity: 50)
+Hall.create(name: 'Hall 6', capacity: 100)
+Hall.create(name: 'Hall 7', capacity: 100)
+Hall.create(name: 'Hall 8', capacity: 100)
+Hall.create(name: 'Hall 9', capacity: 100)
+Hall.create(name: 'Hall 10', capacity: 200)
 
-m1 = Movie.create(name: 'Harry Potter', description: 'Wizard movie', duration: 154)
-m2 = Movie.create(name: 'Lord of The Rings', description: 'Hobbit movie', duration: 194)
-m3 = Movie.create(name: 'Fast and Furious', description: 'Car movie', duration: 140)
-m4 = Movie.create(name: 'James Bond', description: 'Agent movie', duration: 181)
-m5 = Movie.create(name: 'Minions', description: 'Minions movie', duration: 98)
-m6 = Movie.create(name: 'Hobbit', description: 'Hobbits movie', duration: 143)
-m7 = Movie.create(name: 'Star Wars', description: 'Wars movie', duration: 156)
-m8 = Movie.create(name: 'The Godfather', description: 'Agent movie', duration: 130)
-m9 = Movie.create(name: 'Pulp Fiction', description: 'Comedy movie', duration: 100)
-m10 = Movie.create(name: 'Avengers: Infinity War', description: 'Marvel movie', duration: 134)
+10.times do
+    Movie.create(
+        name: Faker::Movie.title,
+        description:  Faker::Movie.quote,
+        duration: rand(100) + 90
+    )
+end
 
-s1 = Seance.create(movie_id: 1, hall_id: 10, start_time: Time.now + 2.days, price: 21)
-s2 = Seance.create(movie_id: 2, hall_id: 9, start_time: Time.now + 3.days, price: 19)
-s3 = Seance.create(movie_id: 3, hall_id: 8, start_time: Time.now + 4.days, price: 17)
-s4 = Seance.create(movie_id: 4, hall_id: 7, start_time: Time.now + 1.days, price: 20)
-s5 = Seance.create(movie_id: 5, hall_id: 6, start_time: Time.now + 5.days, price: 16)
-s6 = Seance.create(movie_id: 6, hall_id: 5, start_time: Time.now + 3.days, price: 18)
-s7 = Seance.create(movie_id: 7, hall_id: 4, start_time: Time.now + 2.days, price: 22)
-s8 = Seance.create(movie_id: 8, hall_id: 3, start_time: Time.now + 5.days, price: 14)
-s9 = Seance.create(movie_id: 9, hall_id: 2, start_time: Time.now + 3.days, price: 12)
-s10 = Seance.create(movie_id: 1, hall_id: 1, start_time: Time.now + 1.days, price: 10)
-s11 = Seance.create(movie_id: 1, hall_id: 1, start_time: Time.now, price: 10)
-s12 = Seance.create(movie_id: 1, hall_id: 1, start_time: Time.now + 4.hours , price: 10)
-s13 = Seance.create(movie_id: 1, hall_id: 1, start_time: Time.now + 8.hours, price: 10)
-s14 = Seance.create(movie_id: 1, hall_id: 1, start_time: Time.now + 12.hours, price: 10)
-s15 = Seance.create(movie_id: 1, hall_id: 1, start_time: Time.now + 16.hours, price: 10)
-s16 = Seance.create(movie_id: 1, hall_id: 1, start_time: Time.now + 20.hours, price: 10)
-s17 = Seance.create(movie_id: 1, hall_id: 1, start_time: Time.now + 1.days + 4.hours, price: 10)
-s18 = Seance.create(movie_id: 1, hall_id: 1, start_time: Time.now + 1.days + 21.hours, price: 10)
-s19 = Seance.create(movie_id: 1, hall_id: 1, start_time: Time.now - 1.days, price: 10)
-s20 = Seance.create(movie_id: 1, hall_id: 1, start_time: Time.now - 6.hours, price: 10)
-s21 = Seance.create(movie_id: 1, hall_id: 2, start_time: Time.now + 1.hours + 30.minutes, price: 10)
-s22 = Seance.create(movie_id: 1, hall_id: 2, start_time: Time.now + 4.hours + 50.minutes, price: 10)
-s23 = Seance.create(movie_id: 1, hall_id: 2, start_time: Time.now + 8.hours + 20.minutes, price: 10)
-s24 = Seance.create(movie_id: 1, hall_id: 2, start_time: Time.now + 11.hours, price: 10)
-s25 = Seance.create(movie_id: 1, hall_id: 4, start_time: Time.now + 2.days, price: 10)
-s26 = Seance.create(movie_id: 1, hall_id: 2, start_time: Time.now + 8.days, price: 10)
-s27 = Seance.create(movie_id: 1, hall_id: 2, start_time: Time.now + 6.days, price: 10)
-s28 = Seance.create(movie_id: 1, hall_id: 2, start_time: Time.now + 4.days, price: 10)
-s29 = Seance.create(movie_id: 1, hall_id: 2, start_time: Time.now + 3.days, price: 10)
-s30 = Seance.create(movie_id: 1, hall_id: 8, start_time: Time.now + 3.days + 10.hours, price: 10)
-s31 = Seance.create(movie_id: 1, hall_id: 7, start_time: Time.now + 3.days + 9.hours, price: 10)
-s32 = Seance.create(movie_id: 1, hall_id: 6, start_time: Time.now + 3.days + 11.hours, price: 10)
-s33 = Seance.create(movie_id: 1, hall_id: 5, start_time: Time.now + 9.days + 20.minutes, price: 10)
-s34 = Seance.create(movie_id: 1, hall_id: 2, start_time: Time.now + 3.days + 20.hours, price: 10)
-s35 = Seance.create(movie_id: 1, hall_id: 4, start_time: Time.now + 5.days + 10.hours, price: 10)
-s36 = Seance.create(movie_id: 1, hall_id: 9, start_time: Time.now + 5.days + 1.hours, price: 10)
-s37 = Seance.create(movie_id: 1, hall_id: 10, start_time: Time.now + 5.days + 5.hours, price: 10)
-s38 = Seance.create(movie_id: 1, hall_id: 8, start_time: Time.now + 5.days + 7.hours, price: 10)
-s39 = Seance.create(movie_id: 1, hall_id: 7, start_time: Time.now + 5.days + 19.hours, price: 10)
+500.times do
+    Seance.create(
+        movie_id: rand(10) + 1,
+        hall_id: rand(10) + 1,
+        start_time: rand(14).days.from_now + rand(24).hours + rand(60).minutes,
+        price: rand(10) + 15
+    )
+end
