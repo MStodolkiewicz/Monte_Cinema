@@ -1,0 +1,17 @@
+<nav class="navbar sticky-top bg-light justify-content-between">
+    <a class="navbar-brand" href="/movies" style="position: relative; left: 45%" >MonteCinema!</a>
+
+    <% if current_user.present? %>
+        <div>
+            <strong> Hi! <%= current_user.email %> </strong>
+            <%= button_to "Logout", destroy_user_session_path, method: :delete,
+                class: "btn btn-outline-danger", form_class: "myButtonForm", style: "padding: 4px;" %>
+        </div>
+
+    <% else %>
+        <div>
+            <%= link_to "Login", new_user_session_path, class: "btn btn-outline-success"%>
+            <%= link_to "Sign up", new_user_registration_path, class: "btn btn-outline-secondary"%>
+        </div>
+    <% end %>
+</nav>

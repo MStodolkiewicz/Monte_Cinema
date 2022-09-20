@@ -13,16 +13,16 @@
   
   <body>
     <div class="container-fluid">
-      <nav class="navbar sticky-top bg-light">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="/movies" style="position: relative; left: 45%">MonteCinema!</a>
-        </div>
-      </nav>
+      <%= render partial: "layouts/navbar" %>
 
-      <% if notice || alert %>
+      <% if notice %>
         <p class="alert alert-success"><%= notice %></p>
+      <% end %>
+
+      <% if alert %>
         <p class="alert alert-warning"><%= alert %></p>
       <% end %>
+
       <%= yield %>
     </div>
   </body>
