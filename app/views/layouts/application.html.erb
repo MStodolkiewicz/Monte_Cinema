@@ -19,6 +19,10 @@
         </div>
       </nav>
 
+      <% if notice || alert %>
+        <p class="alert alert-success"><%= notice %></p>
+        <p class="alert alert-warning"><%= alert %></p>
+      <% end %>
       <%= yield %>
     </div>
   </body>
