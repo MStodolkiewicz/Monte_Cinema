@@ -1,7 +1,27 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
-#   Character.create(name: "Luke", movie: movies.first)
+Hall.create(name: 'Hall 1', capacity: 20)
+Hall.create(name: 'Hall 2', capacity: 50)
+Hall.create(name: 'Hall 3', capacity: 50)
+Hall.create(name: 'Hall 4', capacity: 50)
+Hall.create(name: 'Hall 5', capacity: 50)
+Hall.create(name: 'Hall 6', capacity: 100)
+Hall.create(name: 'Hall 7', capacity: 100)
+Hall.create(name: 'Hall 8', capacity: 100)
+Hall.create(name: 'Hall 9', capacity: 100)
+Hall.create(name: 'Hall 10', capacity: 200)
+
+10.times do
+    Movie.create(
+        name: Faker::Movie.title,
+        description:  Faker::Movie.quote,
+        duration: rand(100) + 90
+    )
+end
+
+500.times do
+    Seance.create(
+        movie_id: Movie.all.sample.id,
+        hall_id: Hall.all.sample.id,
+        start_time: rand(14).days.from_now + rand(24).hours + rand(60).minutes,
+        price: rand(10) + 15
+    )
+end
