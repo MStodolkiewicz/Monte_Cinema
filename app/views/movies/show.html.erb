@@ -1,18 +1,17 @@
-<p style="color: green"><%= notice %></p>
-  <div style="margin-left:35%;"> 
-    <%= render @movie %>
-    <div class="container-fluid">
-      <p>
-          <strong>Description:</strong>
-          <%= @movie.description %>
-      </p>
-    </div>
+<div style="margin-left:35%;"> 
+  <%= render @movie %>
+  <div class="container-fluid">
+    <p>
+        <strong>Description:</strong>
+        <%= @movie.description %>
+    </p>
   </div>
+</div>
 
-  <div style="margin-left:10%; padding-top: 1%;"> 
-    <% @seances.each do |seance| %>
-    <div class="border border-dark" style="float:left; margin-right: 2%; margin-bottom:2%; width: 15%;">
-        <%= render seance %>
-    </div>
-  <% end %>
+<div style="margin-left:10%; padding-top: 1%;"> 
+  <% @seances.each do |seance| %>
+  <div class="border border-dark" style="float:left; margin-right: 2%; margin-bottom:2%; width: 15%;">
+      <%= render seance %>
   </div>
+<% end %>
+</div>
