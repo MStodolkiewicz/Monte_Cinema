@@ -1,14 +1,14 @@
 <p style="color: green"><%= notice %></p>
 
-<h1>Movies</h1>
+<h1 style="margin-left: 45%; margin-bottom: 2%;">Movies</h1>
 
 <div id="movies">
   <% @movies.each do |movie| %>
-    <%= render movie %>
-    <p>
-      <%= link_to "Show this movie", movie %>
-    </p>
+    <div class="border border-dark" style="float:left; margin-right: 2%; margin-bottom:2%; width: 23%;">
+      <%= render movie %>
+      <div style="margin-left: 2%;">
+      <%= link_to "Check seances", movie %>
+      </div>
+    </div>
   <% end %>
 </div>
-
-<%= link_to "New movie", new_movie_path %>
