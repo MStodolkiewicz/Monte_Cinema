@@ -1,14 +1,15 @@
-<p style="color: green"><%= notice %></p>
-
 <h1>Halls</h1>
+
+<%= link_to "New hall", new_hall_path, class: "btn btn-outline-success"%>
 
 <div id="halls">
   <% @halls.each do |hall| %>
+  <div class="border border-dark container-fluid" style="float:left; margin: 2%; width: 15%;">
     <%= render hall %>
     <p>
-      <%= link_to "Show this hall", hall %>
+      <%= link_to "Edit this hall", edit_hall_path(hall), class: "btn btn-outline-secondary" %> 
+      <%= button_to "Destroy this hall", hall, method: :delete, class: "btn btn-outline-danger" %>
     </p>
+  </div>
   <% end %>
 </div>
-
-<%= link_to "New hall", new_hall_path %>

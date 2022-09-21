@@ -6,9 +6,6 @@ class HallsController < ApplicationController
     @halls = Hall.all
   end
 
-  # GET /halls/1 or /halls/1.json
-  def show; end
-
   # GET /halls/new
   def new
     @hall = Hall.new
@@ -23,7 +20,7 @@ class HallsController < ApplicationController
 
     respond_to do |format|
       if @hall.save
-        format.html { redirect_to hall_url(@hall), notice: "Hall was successfully created." }
+        format.html { redirect_to halls_url, notice: "Hall was successfully created." }
         format.json { render :show, status: :created, location: @hall }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -36,7 +33,7 @@ class HallsController < ApplicationController
   def update
     respond_to do |format|
       if @hall.update(hall_params)
-        format.html { redirect_to hall_url(@hall), notice: "Hall was successfully updated." }
+        format.html { redirect_to halls_url, notice: "Hall was successfully updated." }
         format.json { render :show, status: :ok, location: @hall }
       else
         format.html { render :edit, status: :unprocessable_entity }
