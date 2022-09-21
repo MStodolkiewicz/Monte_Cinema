@@ -1,13 +1,11 @@
 class SeancesController < ApplicationController
-  before_action :set_seance, only: %i[show edit update destroy]
+  include Pundit::Authorization
 
-  # GET /seances or /seances.json
-  def index
-    @seances = Seance.all
-  end
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+  # Probably should move this after implementing errorhandler
 
-  # GET /seances/1 or /seances/1.json
-  def show; end
+  before_action :set_seance, only: %i[edit update destroy]
+  before_action :manager_authenticate
 
   # GET /seances/new
   def new
@@ -65,5 +63,15 @@ class SeancesController < ApplicationController
   # Only allow a list of trusted parameters through.
   def seance_params
     params.require(:seance).permit(:start_time, :price, :hall_id, :movie_id)
+  end
+
+  # Probably should move this after implementing errorhandler
+  def user_not_authorized
+    flash[:alert] = "You are not authorized to perform this action."
+    redirect_back(fallback_location: root_path)
+  end
+
+  def manager_authenticate
+    authorize current_user, :manager?, policy_class: UserPolicy
   end
 end

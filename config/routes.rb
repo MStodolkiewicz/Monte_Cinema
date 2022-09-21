@@ -1,11 +1,9 @@
 Rails.application.routes.draw do
   devise_for :users
   root 'movies#index'
-  resources :seances
-  resources :movies
+  resources :movies do
+    resources :seances, except: [:show, :index]
+  end     
+resources :seances
   resources :halls, except: :show
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Defines the root path route ("/")
-  # root "articles#index"
 end
