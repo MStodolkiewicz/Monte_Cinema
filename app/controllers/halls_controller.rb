@@ -2,7 +2,7 @@ class HallsController < ApplicationController
   include Pundit::Authorization
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
-  #Probably should move this after implementing errorhandler
+  # Probably should move this after implementing errorhandler
 
   before_action :set_hall, only: %i[edit update destroy]
   before_action :manager_authenticate
@@ -76,7 +76,6 @@ class HallsController < ApplicationController
   end
 
   def manager_authenticate
-    raise Pundit::NotAuthorizedError, "must be logged in" unless current_user
-    authorize current_user, :manager?
+    authorize current_user, :manager?, policy_class: UserPolicy
   end
 end

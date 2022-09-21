@@ -1,4 +1,9 @@
 class MoviesController < ApplicationController
+  include Pundit::Authorization
+
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+  # Probably should move this after implementing errorhandler
+
   before_action :set_movie, only: %i[show edit update destroy]
 
   # GET /movies or /movies.json
@@ -17,10 +22,13 @@ class MoviesController < ApplicationController
   # GET /movies/new
   def new
     @movie = Movie.new
+    authorize @movie
   end
 
   # GET /movies/1/edit
-  def edit; end
+  def edit
+    authorize @movie
+  end
 
   # POST /movies or /movies.json
   def create
@@ -52,6 +60,7 @@ class MoviesController < ApplicationController
 
   # DELETE /movies/1 or /movies/1.json
   def destroy
+    authorize @movie
     @movie.destroy
 
     respond_to do |format|
@@ -70,5 +79,10 @@ class MoviesController < ApplicationController
   # Only allow a list of trusted parameters through.
   def movie_params
     params.require(:movie).permit(:name, :description, :duration)
+  end
+
+  def user_not_authorized
+    flash[:alert] = "You are not authorized to perform this action."
+    redirect_back(fallback_location: root_path)
   end
 end
