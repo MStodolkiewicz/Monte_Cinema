@@ -1,5 +1,11 @@
 class HallsController < ApplicationController
-  before_action :set_hall, only: %i[show edit update destroy]
+  include Pundit::Authorization
+
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+  #Probably should move this after implementing errorhandler
+
+  before_action :set_hall, only: %i[edit update destroy]
+  before_action :manager_authenticate
 
   # GET /halls or /halls.json
   def index
@@ -62,5 +68,15 @@ class HallsController < ApplicationController
   # Only allow a list of trusted parameters through.
   def hall_params
     params.require(:hall).permit(:capacity, :name)
+  end
+
+  def user_not_authorized
+    flash[:alert] = "You are not authorized to perform this action."
+    redirect_back(fallback_location: root_path)
+  end
+
+  def manager_authenticate
+    raise Pundit::NotAuthorizedError, "must be logged in" unless current_user
+    authorize current_user, :manager?
   end
 end
