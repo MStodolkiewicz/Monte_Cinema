@@ -1,22 +1,23 @@
 class SeancesController < ApplicationController
   include Pundit::Authorization
 
-  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
-  # Probably should move this after implementing errorhandler
-
   before_action :set_seance, only: %i[edit update destroy]
-  before_action :manager_authenticate
+  before_action :authenticate_user!
 
   # GET /seances/new
   def new
+    authorize Seance
     @seance = Seance.new
   end
 
   # GET /seances/1/edit
-  def edit; end
+  def edit
+    authorize Seance
+  end
 
   # POST /seances or /seances.json
   def create
+    authorize Seance
     @seance = Seance.new(seance_params)
 
     respond_to do |format|
@@ -32,6 +33,7 @@ class SeancesController < ApplicationController
 
   # PATCH/PUT /seances/1 or /seances/1.json
   def update
+    authorize Seance
     respond_to do |format|
       if @seance.update(seance_params)
         format.html { redirect_to seance_url(@seance), notice: "Seance was successfully updated." }
@@ -45,6 +47,7 @@ class SeancesController < ApplicationController
 
   # DELETE /seances/1 or /seances/1.json
   def destroy
+    authorize Seance
     @seance.destroy
 
     respond_to do |format|
@@ -63,15 +66,5 @@ class SeancesController < ApplicationController
   # Only allow a list of trusted parameters through.
   def seance_params
     params.require(:seance).permit(:start_time, :price, :hall_id, :movie_id)
-  end
-
-  # Probably should move this after implementing errorhandler
-  def user_not_authorized
-    flash[:alert] = "You are not authorized to perform this action."
-    redirect_back(fallback_location: root_path)
-  end
-
-  def manager_authenticate
-    authorize current_user, :manager?, policy_class: UserPolicy
   end
 end
