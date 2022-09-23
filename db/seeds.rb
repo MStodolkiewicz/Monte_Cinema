@@ -21,7 +21,7 @@ end
     Seance.create(
         movie_id: Movie.all.sample.id,
         hall_id: Hall.all.sample.id,
-        start_time: rand(14).days.from_now + rand(24).hours + rand(60).minutes,
+        start_time: DateTime.current.beginning_of_minute + rand(14).days + rand(24).hours + rand(60).minutes,
         price: rand(10) + 15
     )
 end

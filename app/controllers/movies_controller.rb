@@ -1,13 +1,18 @@
 class MoviesController < ApplicationController
+  include Pundit::Authorization
+
   before_action :set_movie, only: %i[show edit update destroy]
+  before_action :authenticate_user!, except: %i[index show]
 
   # GET /movies or /movies.json
   def index
+    authorize Movie
     @movies = Movie.all
   end
 
   # GET /movies/1 or /movies/1.json
   def show
+    authorize @movie
     @seances = Seance
                .where(movie_id: params[:id])
                .where(start_time: 30.minutes.from_now..7.days.from_now)
@@ -16,14 +21,18 @@ class MoviesController < ApplicationController
 
   # GET /movies/new
   def new
+    authorize Movie
     @movie = Movie.new
   end
 
   # GET /movies/1/edit
-  def edit; end
+  def edit
+    authorize Movie
+  end
 
   # POST /movies or /movies.json
   def create
+    authorize Movie
     @movie = Movie.new(movie_params)
 
     respond_to do |format|
@@ -39,6 +48,7 @@ class MoviesController < ApplicationController
 
   # PATCH/PUT /movies/1 or /movies/1.json
   def update
+    authorize @movie
     respond_to do |format|
       if @movie.update(movie_params)
         format.html { redirect_to movie_url(@movie), notice: "Movie was successfully updated." }
@@ -52,6 +62,7 @@ class MoviesController < ApplicationController
 
   # DELETE /movies/1 or /movies/1.json
   def destroy
+    authorize @movie
     @movie.destroy
 
     respond_to do |format|

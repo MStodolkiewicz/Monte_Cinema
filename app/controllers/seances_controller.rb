@@ -1,24 +1,23 @@
 class SeancesController < ApplicationController
-  before_action :set_seance, only: %i[show edit update destroy]
+  include Pundit::Authorization
 
-  # GET /seances or /seances.json
-  def index
-    @seances = Seance.all
-  end
-
-  # GET /seances/1 or /seances/1.json
-  def show; end
+  before_action :set_seance, only: %i[edit update destroy]
+  before_action :authenticate_user!
 
   # GET /seances/new
   def new
+    authorize Seance
     @seance = Seance.new
   end
 
   # GET /seances/1/edit
-  def edit; end
+  def edit
+    authorize Seance
+  end
 
   # POST /seances or /seances.json
   def create
+    authorize Seance
     @seance = Seance.new(seance_params)
 
     respond_to do |format|
@@ -34,6 +33,7 @@ class SeancesController < ApplicationController
 
   # PATCH/PUT /seances/1 or /seances/1.json
   def update
+    authorize @seance
     respond_to do |format|
       if @seance.update(seance_params)
         format.html { redirect_to seance_url(@seance), notice: "Seance was successfully updated." }
@@ -47,6 +47,7 @@ class SeancesController < ApplicationController
 
   # DELETE /seances/1 or /seances/1.json
   def destroy
+    authorize @seance
     @seance.destroy
 
     respond_to do |format|
