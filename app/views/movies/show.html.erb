@@ -5,6 +5,12 @@
         <strong>Description:</strong>
         <%= @movie.description %>
     </p>
+  
+    <% if @current_user.present? %>
+      <% if policy(Seance).new? %>
+        <%= link_to "New seance", new_seance_path(:movie_id => @movie.id), class: "btn btn-outline-success"%>
+      <% end %>
+    <% end %>
   </div>
 </div>
 
@@ -12,6 +18,16 @@
   <% @seances.each do |seance| %>
   <div class="border border-dark" style="float:left; margin-right: 2%; margin-bottom:2%; width: 15%;">
       <%= render seance %>
+
+      <% if @current_user.present? %>
+        <% if policy(Seance).edit? %>
+          <%= link_to "Edit", edit_seance_path(seance), class: "btn btn-outline-secondary" %> 
+        <% end %>
+    
+        <% if policy(Seance).destroy? %>
+          <%= button_to "Destroy", seance, method: :delete, class: "btn btn-outline-danger" %>
+        <% end %>
+      <% end %>
   </div>
-<% end %>
+  <% end %>
 </div>
