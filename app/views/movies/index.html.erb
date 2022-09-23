@@ -8,6 +8,10 @@
   <% if policy(Hall).index? %>
     <%= link_to "Check halls", halls_path, class: "btn btn-outline-secondary"%>
   <% end %>
+
+  <% if policy(Discount).index? %>
+    <%= link_to "Check discounts", discounts_path, class: "btn btn-outline-secondary"%>
+  <% end %>
 <% end %>
 
 <div id="movies" style="margin-top: 1%;">

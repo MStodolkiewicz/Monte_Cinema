@@ -8,7 +8,9 @@
       <%= render discount %>
       <p>
         <%= link_to "Edit this discount", edit_discount_path(discount), class: "btn btn-outline-secondary" %> 
-        <%= button_to "Destroy this discount", discount, method: :delete, class: "btn btn-outline-danger" %>
+        <% if policy(discount).destroy? %>
+          <%= button_to "Destroy this discount", discount, method: :delete, class: "btn btn-outline-danger" %>
+        <% end %>
       </p>
     </div>
   <% end %>

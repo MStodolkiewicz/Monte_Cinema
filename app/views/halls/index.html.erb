@@ -8,7 +8,9 @@
     <%= render hall %>
     <p>
       <%= link_to "Edit this hall", edit_hall_path(hall), class: "btn btn-outline-secondary" %> 
-      <%= button_to "Destroy this hall", hall, method: :delete, class: "btn btn-outline-danger" %>
+      <% if policy(hall).destroy? %>
+        <%= button_to "Destroy this hall", hall, method: :delete, class: "btn btn-outline-danger" %>
+      <% end %>
     </p>
   </div>
   <% end %>
