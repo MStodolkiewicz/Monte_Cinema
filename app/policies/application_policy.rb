@@ -5,10 +5,4 @@ class ApplicationPolicy
     @user = user
     @record = record
   end
-
-  protected
-
-  def manager?
-    user.role == "manager"
-  end
 end

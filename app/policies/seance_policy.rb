@@ -1,6 +1,6 @@
 class SeancePolicy < ApplicationPolicy
   def create?
-    manager? || user.admin?
+    user.manager? || user.admin?
   end
 
   def new?
@@ -8,7 +8,7 @@ class SeancePolicy < ApplicationPolicy
   end
 
   def update?
-    manager? || user.admin?
+    user.manager? || user.admin?
   end
 
   def edit?

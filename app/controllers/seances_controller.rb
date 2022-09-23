@@ -33,7 +33,7 @@ class SeancesController < ApplicationController
 
   # PATCH/PUT /seances/1 or /seances/1.json
   def update
-    authorize Seance
+    authorize @seance
     respond_to do |format|
       if @seance.update(seance_params)
         format.html { redirect_to seance_url(@seance), notice: "Seance was successfully updated." }
@@ -47,7 +47,7 @@ class SeancesController < ApplicationController
 
   # DELETE /seances/1 or /seances/1.json
   def destroy
-    authorize Seance
+    authorize @seance
     @seance.destroy
 
     respond_to do |format|

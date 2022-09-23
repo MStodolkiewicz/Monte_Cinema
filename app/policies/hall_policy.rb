@@ -1,10 +1,10 @@
 class HallPolicy < ApplicationPolicy
   def index?
-    manager? || user.admin?
+    user.manager? || user.admin?
   end
 
   def create?
-    manager? || user.admin?
+    user.manager? || user.admin?
   end
 
   def new?
@@ -12,7 +12,7 @@ class HallPolicy < ApplicationPolicy
   end
 
   def update?
-    manager? || user.admin?
+    user.manager? || user.admin?
   end
 
   def edit?

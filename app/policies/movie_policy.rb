@@ -8,7 +8,7 @@ class MoviePolicy < ApplicationPolicy
   end
 
   def create?
-    manager? || user.admin?
+    user.manager? || user.admin?
   end
 
   def new?
@@ -16,7 +16,7 @@ class MoviePolicy < ApplicationPolicy
   end
 
   def update?
-    manager? || user.admin?
+    user.manager? || user.admin?
   end
 
   def edit?

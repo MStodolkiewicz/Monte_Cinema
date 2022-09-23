@@ -39,7 +39,7 @@ class HallsController < ApplicationController
 
   # PATCH/PUT /halls/1 or /halls/1.json
   def update
-    authorize Hall
+    authorize @hall
     respond_to do |format|
       if @hall.update(hall_params)
         format.html { redirect_to halls_url, notice: "Hall was successfully updated." }
@@ -53,7 +53,7 @@ class HallsController < ApplicationController
 
   # DELETE /halls/1 or /halls/1.json
   def destroy
-    authorize Hall
+    authorize @hall
     @hall.destroy
 
     respond_to do |format|

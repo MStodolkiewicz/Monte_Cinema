@@ -12,7 +12,7 @@ class MoviesController < ApplicationController
 
   # GET /movies/1 or /movies/1.json
   def show
-    authorize Movie
+    authorize @movie
     @seances = Seance
                .where(movie_id: params[:id])
                .where(start_time: 30.minutes.from_now..7.days.from_now)
@@ -48,7 +48,7 @@ class MoviesController < ApplicationController
 
   # PATCH/PUT /movies/1 or /movies/1.json
   def update
-    authorize Movie
+    authorize @movie
     respond_to do |format|
       if @movie.update(movie_params)
         format.html { redirect_to movie_url(@movie), notice: "Movie was successfully updated." }
@@ -62,7 +62,7 @@ class MoviesController < ApplicationController
 
   # DELETE /movies/1 or /movies/1.json
   def destroy
-    authorize Movie
+    authorize @movie
     @movie.destroy
 
     respond_to do |format|
