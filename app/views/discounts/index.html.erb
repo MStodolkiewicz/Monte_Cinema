@@ -1,0 +1,15 @@
+<h1>Discounts</h1>
+
+<%= link_to "New discount", new_discount_path, class: "btn btn-outline-success"%>
+
+<div id="discounts">
+  <% @discounts.each do |discount| %>
+    <div class="border border-dark container-fluid" style="float:left; margin: 2%; width: 15%;">
+      <%= render discount %>
+      <p>
+        <%= link_to "Edit this discount", edit_discount_path(discount), class: "btn btn-outline-secondary" %> 
+        <%= button_to "Destroy this discount", discount, method: :delete, class: "btn btn-outline-danger" %>
+      </p>
+    </div>
+  <% end %>
+</div>

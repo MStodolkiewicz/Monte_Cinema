@@ -6,4 +6,5 @@ Rails.application.routes.draw do
   end     
 resources :seances
   resources :halls, except: :show
+  resources :discounts
 end
