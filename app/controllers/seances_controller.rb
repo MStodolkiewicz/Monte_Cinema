@@ -7,7 +7,7 @@ class SeancesController < ApplicationController
   # GET /seances/new
   def new
     authorize Seance
-    @seance = Seance.new
+    @seance = Seance.new(movie_id: params[:movie_id])
   end
 
   # GET /seances/1/edit
@@ -22,7 +22,7 @@ class SeancesController < ApplicationController
 
     respond_to do |format|
       if @seance.save
-        format.html { redirect_to seance_url(@seance), notice: "Seance was successfully created." }
+        format.html { redirect_to movie_url(@seance.movie_id), notice: "Seance was successfully created." }
         format.json { render :show, status: :created, location: @seance }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -36,7 +36,7 @@ class SeancesController < ApplicationController
     authorize @seance
     respond_to do |format|
       if @seance.update(seance_params)
-        format.html { redirect_to seance_url(@seance), notice: "Seance was successfully updated." }
+        format.html { redirect_to movie_url(@seance.movie_id), notice: "Seance was successfully updated." }
         format.json { render :show, status: :ok, location: @seance }
       else
         format.html { render :edit, status: :unprocessable_entity }
