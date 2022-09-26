@@ -1,24 +1,29 @@
 class DiscountsController < ApplicationController
-  before_action :set_discount, only: %i[show edit update destroy]
+  include Pundit::Authorization
+
+  before_action :set_discount, only: %i[edit update destroy]
+  before_action :authenticate_user!
 
   # GET /discounts or /discounts.json
   def index
+    authorize Discount
     @discounts = Discount.all
   end
 
-  # GET /discounts/1 or /discounts/1.json
-  def show; end
-
   # GET /discounts/new
   def new
+    authorize Discount
     @discount = Discount.new
   end
 
   # GET /discounts/1/edit
-  def edit; end
+  def edit
+    authorize Discount
+  end
 
   # POST /discounts or /discounts.json
   def create
+    authorize Discount
     @discount = Discount.new(discount_params)
 
     respond_to do |format|
@@ -34,6 +39,7 @@ class DiscountsController < ApplicationController
 
   # PATCH/PUT /discounts/1 or /discounts/1.json
   def update
+    authorize @discount
     respond_to do |format|
       if @discount.update(discount_params)
         format.html { redirect_to discount_url(@discount), notice: "Discount was successfully updated." }
@@ -47,6 +53,7 @@ class DiscountsController < ApplicationController
 
   # DELETE /discounts/1 or /discounts/1.json
   def destroy
+    authorize @discount
     @discount.destroy
 
     respond_to do |format|
