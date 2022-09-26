@@ -31,7 +31,11 @@
     <%= form.text_field :movie_id %>
   </div>
 
-  <div>
-    <%= form.submit %>
+  <div style="margin-top: 1%;">
+    <%= form.submit class: 'btn btn-outline-success' %>
   </div>
+  <div>
+    <%= link_to "Back to movies", movies_path, class: "btn btn-outline-secondary" %>
+  </div>
+
 <% end %>
