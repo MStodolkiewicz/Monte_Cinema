@@ -1,6 +1,7 @@
 class Seance < ApplicationRecord
   belongs_to :hall
   belongs_to :movie
+  has_many :reservations, dependent: :destroy
 
   validates_associated :hall, :movie
   before_validation :set_end_time, unless: :start_nil?
