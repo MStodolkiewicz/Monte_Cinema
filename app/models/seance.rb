@@ -6,9 +6,9 @@ class Seance < ApplicationRecord
   before_validation :set_end_time, unless: :start_nil?
 
   validate :used?
-  validates :start_time, :price, :end_time, presence: true
-  validates :end_time, comparison: { greater_than: :start_time }
-  validates :price, numericality: { greater_than: 0 }
+  validates :start_time, presence: true
+  validates :end_time, presence: true, comparison: { greater_than: :start_time }
+  validates :price, presence: true, numericality: { greater_than: 0 }
 
   private
 

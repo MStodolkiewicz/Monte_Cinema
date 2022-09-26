@@ -8,6 +8,7 @@ class MoviesController < ApplicationController
   def index
     authorize Movie
     @movies = Movie.all
+    @discounts = Discount.all
   end
 
   # GET /movies/1 or /movies/1.json
