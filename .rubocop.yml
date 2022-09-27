@@ -11,3 +11,4 @@ Style/StringLiterals:
   Enabled: false
 Metrics/BlockLength:
   IgnoredMethods: ['describe', 'context']
+  
