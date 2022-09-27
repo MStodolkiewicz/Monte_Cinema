@@ -4,24 +4,20 @@ class HallsController < ApplicationController
   before_action :set_hall, only: %i[edit update destroy]
   before_action :authenticate_user!
 
-  # GET /halls or /halls.json
   def index
     authorize Hall
     @halls = Hall.all
   end
 
-  # GET /halls/new
   def new
     authorize Hall
     @hall = Hall.new
   end
 
-  # GET /halls/1/edit
   def edit
     authorize Hall
   end
 
-  # POST /halls or /halls.json
   def create
     authorize Hall
     @hall = Hall.new(hall_params)
@@ -37,7 +33,6 @@ class HallsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /halls/1 or /halls/1.json
   def update
     authorize @hall
     respond_to do |format|
@@ -51,7 +46,6 @@ class HallsController < ApplicationController
     end
   end
 
-  # DELETE /halls/1 or /halls/1.json
   def destroy
     authorize @hall
     @hall.destroy
@@ -64,12 +58,10 @@ class HallsController < ApplicationController
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
   def set_hall
     @hall = Hall.find(params[:id])
   end
 
-  # Only allow a list of trusted parameters through.
   def hall_params
     params.require(:hall).permit(:capacity, :name)
   end
