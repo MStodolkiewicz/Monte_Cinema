@@ -3,7 +3,7 @@ class User < ApplicationRecord
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
-  enum role: %i[user manager admin]
+  enum role: { user: 0, manager: 1, admin: 2 }
 
   validate :validate_password_length
 
