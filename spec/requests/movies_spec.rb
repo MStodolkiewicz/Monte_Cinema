@@ -288,7 +288,6 @@ RSpec.describe "/movies", type: :request do
 
   describe "DELETE /movies" do
     let(:movie) { create :movie }
-    let(:admin) { create :user, email: "testadmin@test.com", role: 2 }
     context "when no user" do
       it "redirects to sign_in" do
         delete("/movies/#{movie.id}")
@@ -315,6 +314,7 @@ RSpec.describe "/movies", type: :request do
     end
 
     context "when user with permission" do
+      let(:admin) { create :user, email: "testadmin@test.com", role: 2 }
       before { sign_in admin }
       it "returns redirect status" do
         delete("/movies/#{movie.id}")
