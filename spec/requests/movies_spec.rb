@@ -3,7 +3,6 @@ require 'rails_helper'
 RSpec.describe "/movies", type: :request do
   let(:user) { create :user }
   let(:manager) { create :user, email: "testmanager@test.com", role: 1 }
-  let(:admin) { create :user, email: "testadmin@test.com", role: 2 }
   describe "GET /movies" do
     subject(:request) { get movies_url }
 
@@ -289,6 +288,7 @@ RSpec.describe "/movies", type: :request do
 
   describe "DELETE /movies" do
     let(:movie) { create :movie }
+    let(:admin) { create :user, email: "testadmin@test.com", role: 2 }
     context "when no user" do
       it "redirects to sign_in" do
         delete("/movies/#{movie.id}")
