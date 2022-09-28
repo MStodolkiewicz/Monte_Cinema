@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :movie do
-    name { "Title" }
-    description { "Description" }
+    name { Faker::Movie.title }
+    description { Faker::Movie.quote }
     duration { 125 }
   end
 end

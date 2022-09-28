@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "/movies", type: :request do
   let(:user) { create :user }
-  let(:manager) { create :user, email: "testmanager@test.com", role: 1 }
+  let(:manager) { create :user, email: "testmanager@test.com", role: :manager }
   describe "GET /movies" do
     subject(:request) { get movies_url }
 
@@ -75,13 +75,13 @@ RSpec.describe "/movies", type: :request do
       {
         movie: {
           name:,
-          description: "Description",
+          description: Faker::Movie.quote,
           duration:
         }
       }
     end
 
-    let(:name) { "Title" }
+    let(:name) { Faker::Movie.title }
     let(:duration) { 95 }
 
     context "when no user" do
@@ -208,13 +208,13 @@ RSpec.describe "/movies", type: :request do
       {
         movie: {
           name:,
-          description: "Description",
+          description: Faker::Movie.quote,
           duration:
         }
       }
     end
 
-    let(:name) { "EditedTitle" }
+    let(:name) { Faker::Movie.title }
     let(:duration) { 120 }
 
     context "when no user" do
@@ -255,7 +255,7 @@ RSpec.describe "/movies", type: :request do
       end
 
       it "updates movie record" do
-        expect { patch("/movies/#{movie.id}", params:) }.to change { movie.reload.name }.from("Title").to("EditedTitle")
+        expect { patch("/movies/#{movie.id}", params:) }.to change { movie.reload.name }.from(movie.name).to("#{name}")
       end
     end
 
