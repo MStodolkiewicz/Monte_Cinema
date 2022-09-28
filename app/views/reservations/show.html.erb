@@ -1,0 +1,10 @@
+<div style="text-align: center;" class="border border-dark" >
+  <%= render @reservation %>
+
+  <div>
+    <%= link_to "Edit this reservation", edit_reservation_path(@reservation), class: "btn btn-outline-secondary" %>
+    <%= link_to "Back to reservations", reservations_path, class: "btn btn-outline-secondary" %>
+
+    <%= button_to "Destroy this reservation", @reservation, method: :delete, class: "btn btn-outline-danger" %>
+  </div>
+</div>

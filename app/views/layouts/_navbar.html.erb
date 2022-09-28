@@ -4,6 +4,7 @@
     <% if current_user.present? %>
         <div>
             <strong> Hi! <%= current_user.email %> </strong>
+            <%= link_to "Reservations", reservations_path, class: "btn btn-outline-secondary", style: "padding: 4px;"%>
             <%= button_to "Logout", destroy_user_session_path, method: :delete,
                 class: "btn btn-outline-danger", form_class: "myButtonForm", style: "padding: 4px;" %>
         </div>

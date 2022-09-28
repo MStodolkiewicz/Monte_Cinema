@@ -1,0 +1,22 @@
+<div id="<%= dom_id reservation %>">
+  <p>
+    <strong>Status:</strong>
+    <%= reservation.status %>
+  </p>
+
+  <p>
+    <strong>Seance:</strong>
+    <%= reservation.seance.movie.name %>
+  </p>
+
+  <p>
+    <strong>Seance time:</strong>
+    <%= format_date(reservation.seance.start_time) %>
+  </p>
+
+  <p>
+    <strong>User:</strong>
+    <%= reservation.user.email %>
+  </p>
+
+</div>

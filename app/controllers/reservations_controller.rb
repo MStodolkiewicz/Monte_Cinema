@@ -4,14 +4,27 @@ class ReservationsController < ApplicationController
   before_action :set_reservation, only: %i[show edit update destroy]
   before_action :authenticate_user!
 
+  def find_reservations_by_user
+    @reservations = Reservation.where(user_id: find_user_by_email(params[:email]))
+                               .joins(:seance).includes([:user, { seance: [:movie] }])
+                               .order(start_time: :desc)
+    render template: "reservations/index"
+  end
+
+  def find_reservations_by_seance
+    @reservations = Reservation.where(seance_id: params[:seance_id]).includes([:user, { seance: [:movie] }])
+    render template: "reservations/index"
+  end
+
   def index
-    @reservations = Reservation.all
+    @reservations = Reservation.where(user_id: current_user.id).includes([:user, { seance: [:movie] }])
+    render template: "reservations/index"
   end
 
   def show; end
 
   def new
-    @reservation = Reservation.new
+    @reservation = Reservation.new(user_id: current_user.id, seance_id: params[:seance_id])
   end
 
   def edit; end
@@ -59,5 +72,9 @@ class ReservationsController < ApplicationController
 
   def reservation_params
     params.require(:reservation).permit(:status, :seance_id, :user_id)
+  end
+
+  def find_user_by_email(email)
+    User.find_by(email:)
   end
 end

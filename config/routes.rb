@@ -5,8 +5,14 @@ Rails.application.routes.draw do
     resources :seances, except: [:show, :index] do
       resources :reservations
     end
-  end     
-resources :seances, :reservations
+  end 
+  resources :seances
+  resources :reservations do
+    collection do
+      get '/find_reservations_by_user', to: "reservations#find_reservations_by_user"
+      get '/find_reservations_by_seance', to: "reservations#find_reservations_by_seance"
+    end
+  end
   resources :halls, except: :show
-  resources :discounts
+  resources :discounts 
 end
