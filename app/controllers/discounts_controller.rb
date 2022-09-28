@@ -4,24 +4,20 @@ class DiscountsController < ApplicationController
   before_action :set_discount, only: %i[edit update destroy]
   before_action :authenticate_user!
 
-  # GET /discounts or /discounts.json
   def index
     authorize Discount
     @discounts = Discount.all
   end
 
-  # GET /discounts/new
   def new
     authorize Discount
     @discount = Discount.new
   end
 
-  # GET /discounts/1/edit
   def edit
     authorize Discount
   end
 
-  # POST /discounts or /discounts.json
   def create
     authorize Discount
     @discount = Discount.new(discount_params)
@@ -37,7 +33,6 @@ class DiscountsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /discounts/1 or /discounts/1.json
   def update
     authorize @discount
     respond_to do |format|
@@ -51,7 +46,6 @@ class DiscountsController < ApplicationController
     end
   end
 
-  # DELETE /discounts/1 or /discounts/1.json
   def destroy
     authorize @discount
     @discount.destroy
@@ -64,12 +58,10 @@ class DiscountsController < ApplicationController
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
   def set_discount
     @discount = Discount.find(params[:id])
   end
 
-  # Only allow a list of trusted parameters through.
   def discount_params
     params.require(:discount).permit(:tickets_needed, :value)
   end

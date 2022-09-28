@@ -4,18 +4,15 @@ class SeancesController < ApplicationController
   before_action :set_seance, only: %i[edit update destroy]
   before_action :authenticate_user!
 
-  # GET /seances/new
   def new
     authorize Seance
     @seance = Seance.new(movie_id: params[:movie_id])
   end
 
-  # GET /seances/1/edit
   def edit
     authorize Seance
   end
 
-  # POST /seances or /seances.json
   def create
     authorize Seance
     @seance = Seance.new(seance_params)
@@ -31,7 +28,6 @@ class SeancesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /seances/1 or /seances/1.json
   def update
     authorize @seance
     respond_to do |format|
@@ -45,7 +41,6 @@ class SeancesController < ApplicationController
     end
   end
 
-  # DELETE /seances/1 or /seances/1.json
   def destroy
     authorize @seance
     @seance.destroy
@@ -58,12 +53,10 @@ class SeancesController < ApplicationController
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
   def set_seance
     @seance = Seance.find(params[:id])
   end
 
-  # Only allow a list of trusted parameters through.
   def seance_params
     params.require(:seance).permit(:start_time, :price, :hall_id, :movie_id)
   end
