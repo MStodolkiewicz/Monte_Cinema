@@ -7,9 +7,12 @@ Rails.application.routes.draw do
     end
   end 
   resources :seances
-  resources :reservations
-  get '/find_reservations_by_user', to: "reservations#find_reservations_by_user"
-  get '/find_reservations_by_seance', to: "reservations#find_reservations_by_seance"
+  resources :reservations do
+    collection do
+      get '/find_reservations_by_user', to: "reservations#find_reservations_by_user"
+      get '/find_reservations_by_seance', to: "reservations#find_reservations_by_seance"
+    end
+  end
   resources :halls, except: :show
   resources :discounts 
 end

@@ -1,6 +1,6 @@
 <h1>Reservations</h1>
 
-<%= form_with url: "/find_reservations_by_user", method: :get do |form| %>
+<%= form_with url: "/reservations/find_reservations_by_user", method: :get do |form| %>
   <%= form.label :email, "Search for:" %>
   <%= form.text_field :email %>
   <%= form.submit "Search" %>

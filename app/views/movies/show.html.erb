@@ -8,7 +8,7 @@
   
     <% if @current_user.present? %>
       <% if policy(Seance).new? %>
-        <%= link_to "New seance", new_seance_path(:movie_id => @movie.id), class: "btn btn-outline-success"%>
+        <%= link_to "New seance", new_seance_path(movie_id: @movie.id), class: "btn btn-outline-success"%>
       <% end %>
     <% end %>
   </div>
@@ -19,11 +19,11 @@
   <div class="border border-dark" style="float:left; margin-right: 2%; margin-bottom:2%; width: 15%;">
       <%= render seance %>
 
-      <%= link_to "Make reservation", new_reservation_path(:seance_id => seance.id), class: "btn btn-outline-success" %> 
+      <%= link_to "Make reservation", new_reservation_path(seance_id: seance.id), class: "btn btn-outline-success" %> 
       
       <% if @current_user.present? %>
 
-        <%= link_to "Check reservations", find_reservations_by_seance_path(:seance_id => seance.id), class: "btn btn-outline-secondary" %>
+        <%= link_to "Check reservations", find_reservations_by_seance_reservations_path(seance_id: seance.id), class: "btn btn-outline-secondary" %>
         
         <% if policy(Seance).edit? %>
           <%= link_to "Edit", edit_seance_path(seance), class: "btn btn-outline-secondary" %> 
