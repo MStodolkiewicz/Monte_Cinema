@@ -1,44 +1,17 @@
 require 'rails_helper'
 
-RSpec.describe "/movies", type: :request do
+RSpec.describe "/halls", type: :request do
   let(:user) { create :user }
   let(:manager) { create :user, email: "testmanager@test.com", role: :manager }
-  describe "GET /movies" do
-    subject(:request) { get movies_url }
-
-    before { request }
-
-    it "returns successful response" do
-      expect(response).to be_successful
-    end
-
-    it "renders proper template" do
-      expect(response).to render_template("movies/index")
-    end
-  end
-
-  describe "GET /movies/movie_id" do
-    let(:movie) { create :movie }
-    it "returns successful response" do
-      get("/movies/#{movie.id}")
-      expect(response.status).to eq(200)
-    end
-
-    it "renders proper template" do
-      get("/movies/#{movie.id}")
-      expect(response).to render_template("movies/show")
-    end
-  end
-
-  describe "GET /movies/new" do
+  describe "GET /halls" do
     context "when no user" do
       it "redirects to sign_in" do
-        get("/movies/new")
+        get("/halls")
         expect(response).to redirect_to("/users/sign_in")
       end
 
       it "returns redirect status" do
-        get("/movies/new")
+        get("/halls")
         expect(response.status).to eq(302)
       end
     end
@@ -46,12 +19,12 @@ RSpec.describe "/movies", type: :request do
     context "when user without permission" do
       before { sign_in user }
       it "redirects to root" do
-        get("/movies/new")
+        get("/halls")
         expect(response).to redirect_to("/")
       end
 
       it "returns redirect status" do
-        get("/movies/new")
+        get("/halls")
         expect(response.status).to eq(302)
       end
     end
@@ -59,118 +32,26 @@ RSpec.describe "/movies", type: :request do
     context "when user with permission" do
       before { sign_in manager }
       it "returns successful response" do
-        get("/movies/new")
+        get("/halls")
         expect(response.status).to eq(200)
       end
 
       it "renders proper template" do
-        get("/movies/new")
-        expect(response).to render_template("movies/new")
+        get("/halls")
+        expect(response).to render_template("halls/index")
       end
     end
   end
 
-  describe "POST /movies" do
-    let(:params) do
-      {
-        movie: {
-          name:,
-          description: Faker::Movie.quote,
-          duration:
-        }
-      }
-    end
-
-    let(:name) { Faker::Movie.title }
-    let(:duration) { Faker::Number.number(digits: 2) }
-
+  describe "GET /halls/new" do
     context "when no user" do
       it "redirects to sign_in" do
-        post("/movies")
+        get("/halls/new")
         expect(response).to redirect_to("/users/sign_in")
       end
 
       it "returns redirect status" do
-        post("/movies")
-        expect(response.status).to eq(302)
-      end
-
-      it "does not create a movie record" do
-        expect { post("/movies", params:) }.not_to change(Movie, :count)
-      end
-    end
-
-    context "when user without permission" do
-      before { sign_in user }
-      it "redirects to root" do
-        post("/movies", params:)
-        expect(response).to redirect_to("/")
-      end
-
-      it "returns redirect status" do
-        post("/movies")
-        expect(response.status).to eq(302)
-      end
-
-      it "does not create a movie record" do
-        expect { post("/movies", params:) }.not_to change(Movie, :count)
-      end
-    end
-
-    context "when user with permission" do
-      before { sign_in manager }
-      it "returns redirect status" do
-        post("/movies", params:)
-        expect(response.status).to eq(302)
-      end
-
-      it "redirects to movie/movie_id" do
-        post("/movies", params:)
-        expect(response).to redirect_to action: :show, id: assigns(:movie).id
-      end
-
-      it "creates movie record" do
-        expect { post("/movies", params:) }.to change(Movie, :count).by(1)
-      end
-    end
-
-    context "when params invalid" do
-      before { sign_in manager }
-      let(:duration) { "s" }
-
-      it "doesn't create movie record" do
-        expect { post("/movies", params:) }.not_to change(Movie, :count)
-      end
-
-      it "returns unsuccessful response" do
-        post("/movies", params:)
-        expect(response.status).to eq(422)
-      end
-
-      let(:duration) { Faker::Number.number(digits: 2) }
-      let(:name) { nil }
-
-      it "doesn't create movie record" do
-        expect { post("/movies", params:) }.not_to change(Movie, :count)
-      end
-
-      it "returns unsuccessful response" do
-        post("/movies", params:)
-        expect(response.status).to eq(422)
-      end
-    end
-  end
-
-  describe "GET /movies/movie_id/edit" do
-    let(:movie) { create :movie }
-    context "when no user" do
-      it "redirects to sign_in" do
-        get("/movies/#{movie.id}/edit")
-        expect(response).to redirect_to("/users/sign_in")
-      end
-
-      it "returns redirect status" do
-        get("/movies/#{movie.id}/edit")
+        get("/halls/new")
         expect(response.status).to eq(302)
       end
     end
@@ -178,12 +59,12 @@ RSpec.describe "/movies", type: :request do
     context "when user without permission" do
       before { sign_in user }
       it "redirects to root" do
-        get("/movies/#{movie.id}/edit")
+        get("/halls/new")
         expect(response).to redirect_to("/")
       end
 
       it "returns redirect status" do
-        get("/movies/#{movie.id}/edit")
+        get("/halls/new")
         expect(response.status).to eq(302)
       end
     end
@@ -191,40 +72,117 @@ RSpec.describe "/movies", type: :request do
     context "when user with permission" do
       before { sign_in manager }
       it "returns successful response" do
-        get("/movies/#{movie.id}/edit")
+        get("/halls/new")
         expect(response.status).to eq(200)
       end
 
       it "renders proper template" do
-        get("/movies/#{movie.id}/edit")
-        expect(response).to render_template("movies/edit")
+        get("/halls/new")
+        expect(response).to render_template("halls/new")
       end
     end
   end
 
-  describe "PATCH /movies" do
-    let(:movie) { create :movie }
+  describe "POST /halls" do
     let(:params) do
       {
-        movie: {
+        hall: {
           name:,
-          description: Faker::Movie.quote,
-          duration:
+          capacity:
         }
       }
     end
 
-    let(:name) { Faker::Movie.title }
-    let(:duration) { Faker::Number.number(digits: 2) }
+    let(:name) { "Sala #{Faker::Number.number(digits: 1)}" }
+    let(:capacity) { Faker::Number.number(digits: 2) }
 
     context "when no user" do
       it "redirects to sign_in" do
-        patch("/movies/#{movie.id}", params:)
+        post("/halls")
         expect(response).to redirect_to("/users/sign_in")
       end
 
       it "returns redirect status" do
-        patch("/movies/#{movie.id}")
+        post("/halls")
+        expect(response.status).to eq(302)
+      end
+
+      it "does not create a hall record" do
+        expect { post("/halls", params:) }.not_to change(Hall, :count)
+      end
+    end
+
+    context "when user without permission" do
+      before { sign_in user }
+      it "redirects to root" do
+        post("/halls", params:)
+        expect(response).to redirect_to("/")
+      end
+
+      it "returns redirect status" do
+        post("/halls")
+        expect(response.status).to eq(302)
+      end
+
+      it "does not create a hall record" do
+        expect { post("/halls", params:) }.not_to change(Hall, :count)
+      end
+    end
+
+    context "when user with permission" do
+      before { sign_in manager }
+      it "returns redirect status" do
+        post("/halls", params:)
+        expect(response.status).to eq(302)
+      end
+
+      it "redirects to /halls" do
+        post("/halls", params:)
+        expect(response).to redirect_to("/halls")
+      end
+
+      it "creates hall record" do
+        expect { post("/halls", params:) }.to change(Hall, :count).by(1)
+      end
+    end
+
+    context "when params invalid" do
+      before { sign_in manager }
+      let(:capacity) { "s" }
+
+      it "doesn't create hall record" do
+        expect { post("/halls", params:) }.not_to change(Hall, :count)
+      end
+
+      it "returns unsuccessful response" do
+        post("/halls", params:)
+        expect(response.status).to eq(422)
+      end
+
+      let(:capacity) { Faker::Number.number(digits: 2) }
+      let(:name) { nil }
+
+      it "doesn't create hall record" do
+        expect { post("/halls", params:) }.not_to change(Hall, :count)
+      end
+
+      it "returns unsuccessful response" do
+        post("/halls", params:)
+        expect(response.status).to eq(422)
+      end
+    end
+  end
+
+  describe "GET /halls/hall_id/edit" do
+    let(:hall) { create :hall }
+    context "when no user" do
+      it "redirects to sign_in" do
+        get("/halls/#{hall.id}/edit")
+        expect(response).to redirect_to("/users/sign_in")
+      end
+
+      it "returns redirect status" do
+        get("/halls/#{hall.id}/edit")
         expect(response.status).to eq(302)
       end
     end
@@ -232,12 +190,65 @@ RSpec.describe "/movies", type: :request do
     context "when user without permission" do
       before { sign_in user }
       it "redirects to root" do
-        patch("/movies/#{movie.id}", params:)
+        get("/halls/#{hall.id}/edit")
         expect(response).to redirect_to("/")
       end
 
       it "returns redirect status" do
-        patch("/movies/#{movie.id}")
+        get("/halls/#{hall.id}/edit")
+        expect(response.status).to eq(302)
+      end
+    end
+
+    context "when user with permission" do
+      before { sign_in manager }
+      it "returns successful response" do
+        get("/halls/#{hall.id}/edit")
+        expect(response.status).to eq(200)
+      end
+
+      it "renders proper template" do
+        get("/halls/#{hall.id}/edit")
+        expect(response).to render_template("halls/edit")
+      end
+    end
+  end
+
+  describe "PATCH /halls" do
+    let(:hall) { create :hall }
+    let(:params) do
+      {
+        hall: {
+          name:,
+          capacity:
+        }
+      }
+    end
+
+    let(:name) { "Sala #{Faker::Number.number(digits: 1)}" }
+    let(:capacity) { Faker::Number.number(digits: 2) }
+
+    context "when no user" do
+      it "redirects to sign_in" do
+        patch("/halls/#{hall.id}", params:)
+        expect(response).to redirect_to("/users/sign_in")
+      end
+
+      it "returns redirect status" do
+        patch("/halls/#{hall.id}")
+        expect(response.status).to eq(302)
+      end
+    end
+
+    context "when user without permission" do
+      before { sign_in user }
+      it "redirects to root" do
+        patch("/halls/#{hall.id}", params:)
+        expect(response).to redirect_to("/")
+      end
+
+      it "returns redirect status" do
+        patch("/halls/#{hall.id}")
         expect(response.status).to eq(302)
       end
     end
@@ -245,17 +256,17 @@ RSpec.describe "/movies", type: :request do
     context "when user with permission" do
       before { sign_in manager }
       it "returns redirect status" do
-        patch("/movies/#{movie.id}", params:)
+        patch("/halls/#{hall.id}", params:)
         expect(response.status).to eq(302)
       end
 
-      it "redirects to movie/movie_id" do
-        patch("/movies/#{movie.id}", params:)
-        expect(response).to redirect_to action: :show, id: assigns(:movie).id
+      it "redirects to /halls" do
+        patch("/halls/#{hall.id}", params:)
+        expect(response).to redirect_to("/halls")
       end
 
-      it "updates movie record" do
-        expect { patch("/movies/#{movie.id}", params:) }.to change { movie.reload.name }.from(movie.name).to(name.to_s)
+      it "updates hall record" do
+        expect { patch("/halls/#{hall.id}", params:) }.to change { hall.reload.name }.from(hall.name).to(name.to_s)
       end
     end
 
@@ -263,39 +274,39 @@ RSpec.describe "/movies", type: :request do
       before { sign_in manager }
       let(:duration) { "s" }
 
-      it "doesn't create movie record" do
-        expect { patch("/movies/#{movie.id}", params:) }.not_to(change { movie.reload.name })
+      it "doesn't create hall record" do
+        expect { patch("/halls/#{hall.id}", params:) }.not_to(change { hall.reload.name })
       end
 
       it "returns unsuccessful response" do
-        patch("/movies/#{movie.id}", params:)
+        patch("/halls/#{hall.id}", params:)
         expect(response.status).to eq(422)
       end
 
       let(:duration) { Faker::Number.number(digits: 2) }
       let(:name) { nil }
 
-      it "doesn't create movie record" do
-        expect { patch("/movies/#{movie.id}", params:) }.not_to(change { movie.reload.name })
+      it "doesn't create hall record" do
+        expect { patch("/halls/#{hall.id}", params:) }.not_to(change { hall.reload.name })
       end
 
       it "returns unsuccessful response" do
-        patch("/movies/#{movie.id}", params:)
+        patch("/halls/#{hall.id}", params:)
         expect(response.status).to eq(422)
       end
     end
   end
 
-  describe "DELETE /movies" do
-    let(:movie) { create :movie }
+  describe "DELETE /halls" do
+    let(:hall) { create :hall }
     context "when no user" do
       it "redirects to sign_in" do
-        delete("/movies/#{movie.id}")
+        delete("/halls/#{hall.id}")
         expect(response).to redirect_to("/users/sign_in")
       end
 
       it "returns redirect status" do
-        delete("/movies/#{movie.id}")
+        delete("/halls/#{hall.id}")
         expect(response.status).to eq(302)
       end
     end
@@ -303,12 +314,12 @@ RSpec.describe "/movies", type: :request do
     context "when user without permission" do
       before { sign_in user }
       it "redirects to root" do
-        delete("/movies/#{movie.id}")
+        delete("/halls/#{hall.id}")
         expect(response).to redirect_to("/")
       end
 
       it "returns redirect status" do
-        delete("/movies/#{movie.id}")
+        delete("/halls/#{hall.id}")
         expect(response.status).to eq(302)
       end
     end
@@ -317,17 +328,17 @@ RSpec.describe "/movies", type: :request do
       let(:admin) { create :user, email: "testadmin@test.com", role: 2 }
       before { sign_in admin }
       it "returns redirect status" do
-        delete("/movies/#{movie.id}")
+        delete("/halls/#{hall.id}")
         expect(response.status).to eq(302)
       end
 
-      it "redirects to /movies" do
-        delete("/movies/#{movie.id}")
-        expect(response).to redirect_to("/movies")
+      it "redirects to /halls" do
+        delete("/halls/#{hall.id}")
+        expect(response).to redirect_to("/halls")
       end
 
-      it "destroy movie record" do
-        expect { delete("/movies/#{movie.id}") }.not_to change(Movie, :count)
+      it "destroy hall record" do
+        expect { delete("/halls/#{hall.id}") }.not_to change(Hall, :count)
       end
     end
   end
