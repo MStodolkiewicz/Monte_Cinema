@@ -5,20 +5,19 @@ class ReservationsController < ApplicationController
   before_action :authenticate_user!
 
   def find_reservations_by_user
-    @reservations = Reservation.where(user_id: 
-      User.find_by(email: params[:email]))
-    .joins(:seance).includes([:user, seance:[:movie]])
-    .order(start_time: :desc)
+    @reservations = Reservation.where(user_id: find_user_by_email(params[:email]))
+                               .joins(:seance).includes([:user, { seance: [:movie] }])
+                               .order(start_time: :desc)
     render template: "reservations/index"
   end
 
   def find_reservations_by_seance
-    @reservations = Reservation.where(seance_id: params[:seance_id]).includes([:user, seance:[:movie]])
+    @reservations = Reservation.where(seance_id: params[:seance_id]).includes([:user, { seance: [:movie] }])
     render template: "reservations/index"
   end
 
   def index
-    @reservations = Reservation.where(user_id: current_user.id).includes([:user, seance:[:movie]])
+    @reservations = Reservation.where(user_id: current_user.id).includes([:user, { seance: [:movie] }])
     render template: "reservations/index"
   end
 
@@ -73,5 +72,9 @@ class ReservationsController < ApplicationController
 
   def reservation_params
     params.require(:reservation).permit(:status, :seance_id, :user_id)
+  end
+
+  def find_user_by_email(email)
+    User.find_by(email:)
   end
 end
