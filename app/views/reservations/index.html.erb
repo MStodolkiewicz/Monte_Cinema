@@ -11,7 +11,12 @@
     <div class="border border-dark" style="margin-bottom:2%;">
       <%= render reservation %>
       <p>
-        <%= link_to "Show this reservation", reservation, class: "btn btn-outline-primary" %>
+        <% if policy(reservation).cancel_reservation? %>
+          <%= button_to "Cancel this reservation", cancel_reservation_reservations_path(id: reservation.id), method: :patch, class: "btn btn-outline-danger" %>
+        <% end %>
+        <% if policy(reservation).confirm_reservation? %>
+          <%= button_to "Confirm this reservation", confirm_reservation_reservations_path(id: reservation.id), method: :patch, class: "btn btn-outline-success" %>
+        <% end %>
       </p>
     </div>
   <% end %>
