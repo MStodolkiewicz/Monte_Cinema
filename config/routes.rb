@@ -9,11 +9,11 @@ Rails.application.routes.draw do
   resources :seances
   resources :reservations do
     collection do
-      get '/find_reservations_by_user', to: "reservations#find_reservations_by_user"
-      get '/find_reservations_by_seance', to: "reservations#find_reservations_by_seance"
-      patch '/cancel_reservation', to: "reservations#cancel_reservation"
-      patch '/confirm_reservation', to: "reservations#confirm_reservation"
+      get '/find_by_user', to: "reservations#find_by_user"
+      get '/find_by_seance', to: "reservations#find_by_seance"
     end
+    patch 'cancel', on: :member
+    patch 'confirm', on: :member
   end
   resources :halls, except: :show
   resources :discounts, except: :show

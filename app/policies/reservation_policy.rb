@@ -27,19 +27,19 @@ class ReservationPolicy < ApplicationPolicy
     user.admin?
   end
 
-  def find_reservations_by_user?
+  def find_by_user?
     user.manager? || user.admin?
   end
 
-  def find_reservations_by_seance?
+  def find_by_seance?
     user.manager? || user.admin?
   end
 
-  def cancel_reservation?
-    @record.status == "reserved" && (user.id == @record.user_id || user.manager?) || user.admin?
+  def cancel?
+    user.id == @record.user_id || user.manager? || user.admin?
   end
 
-  def confirm_reservation?
-    @record.status == "reserved" && user.manager? || user.admin?
+  def confirm?
+    user.manager? || user.admin?
   end
 end
