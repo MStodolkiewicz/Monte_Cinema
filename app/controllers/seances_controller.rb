@@ -46,7 +46,7 @@ class SeancesController < ApplicationController
     @seance.destroy
 
     respond_to do |format|
-      format.html { redirect_to seances_url, notice: "Seance was successfully destroyed." }
+      format.html { redirect_to movie_url(@seance.movie_id), notice: "Seance was successfully destroyed." }
       format.json { head :no_content }
     end
   end
