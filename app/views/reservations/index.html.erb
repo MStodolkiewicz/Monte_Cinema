@@ -1,6 +1,6 @@
 <h1>Reservations</h1>
 
-<%= form_with url: "/reservations/find_reservations_by_user", method: :get do |form| %>
+<%= form_with url: "/reservations/find_by_user", method: :get do |form| %>
   <%= form.label :email, "Search for:" %>
   <%= form.text_field :email %>
   <%= form.submit "Search" %>
@@ -11,11 +11,13 @@
     <div class="border border-dark" style="margin-bottom:2%;">
       <%= render reservation %>
       <p>
-        <% if policy(reservation).cancel_reservation? %>
-          <%= button_to "Cancel this reservation", cancel_reservation_reservations_path(id: reservation.id), method: :patch, class: "btn btn-outline-danger" %>
-        <% end %>
-        <% if policy(reservation).confirm_reservation? %>
-          <%= button_to "Confirm this reservation", confirm_reservation_reservations_path(id: reservation.id), method: :patch, class: "btn btn-outline-success" %>
+        <% if reservation.status == "reserved" %>
+          <% if policy(reservation).cancel? %>
+            <%= button_to "Cancel this reservation", cancel_reservation_path(id: reservation.id), method: :patch, class: "btn btn-outline-danger" %>
+          <% end %>
+          <% if policy(reservation).confirm? %>
+            <%= button_to "Confirm this reservation", confirm_reservation_path(id: reservation.id), method: :patch, class: "btn btn-outline-success" %>
+          <% end %>       
         <% end %>
       </p>
     </div>
