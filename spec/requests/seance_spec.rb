@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe "/seances", type: :request do
   let(:user) { create :user }
   let(:manager) { create :user, email: "testmanager@test.com", role: :manager }
-  
+
   describe "GET /seances/new" do
     context "when no user" do
       it "redirects to sign_in" do
@@ -126,6 +126,21 @@ RSpec.describe "/seances", type: :request do
         expect(response.status).to eq(422)
       end
     end
+
+    context "when hall used" do
+      before { sign_in manager }
+
+      it "doesn't create seance record" do
+        post("/seances", params:)
+        expect { post("/seances", params:) }.not_to change(Seance, :count)
+      end
+
+      it "returns unsuccessful response" do
+        post("/seances", params:)
+        post("/seances", params:)
+        expect(response.status).to eq(422)
+      end
+    end
   end
 
   describe "GET /seances/seance_id/edit" do
@@ -172,22 +187,22 @@ RSpec.describe "/seances", type: :request do
   describe "PATCH /seances/seance_id" do
     let(:seance) { create :seance }
     let(:params) do
-        {
-          seance: {
-            start_time:,
-            price:,
-            movie_id:,
-            hall_id:
-          }
+      {
+        seance: {
+          start_time:,
+          price:,
+          movie_id:,
+          hall_id:
         }
-      end
-      let(:movie) { create :movie }
-      let(:hall) { create :hall }
-  
-      let(:hall_id) { hall.id }
-      let(:movie_id) { movie.id }
-      let(:price) { Faker::Number.number(digits: 2) }
-      let(:start_time) { DateTime.current }  
+      }
+    end
+    let(:movie) { create :movie }
+    let(:hall) { create :hall }
+
+    let(:hall_id) { hall.id }
+    let(:movie_id) { movie.id }
+    let(:price) { Faker::Number.number(digits: 2) }
+    let(:start_time) { DateTime.current }
 
     context "when no user" do
       it "redirects to sign_in" do
@@ -227,13 +242,19 @@ RSpec.describe "/seances", type: :request do
       end
 
       it "updates seance price" do
-        expect { patch("/seances/#{seance.id}", params:) }.to change { seance.reload.price }.from(seance.price).to(price)
+        expect { patch("/seances/#{seance.id}", params:) }.to change {
+                                                                seance.reload.price
+                                                              }.from(seance.price).to(price)
       end
       it "updates movie" do
-        expect { patch("/seances/#{seance.id}", params:) }.to change { seance.reload.movie_id }.from(seance.movie_id).to(movie_id)
+        expect { patch("/seances/#{seance.id}", params:) }.to change {
+                                                                seance.reload.movie_id
+                                                              }.from(seance.movie_id).to(movie_id)
       end
       it "updates hall" do
-        expect { patch("/seances/#{seance.id}", params:) }.to change { seance.reload.hall_id }.from(seance.hall_id).to(hall_id)
+        expect { patch("/seances/#{seance.id}", params:) }.to change {
+                                                                seance.reload.hall_id
+                                                              }.from(seance.hall_id).to(hall_id)
       end
     end
 
