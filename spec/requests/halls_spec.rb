@@ -92,12 +92,8 @@ RSpec.describe "/halls", type: :request do
 
   describe "POST /halls" do
     subject(:request) { post('/halls', params:) }
-    let(:params) do
-      {
-        hall: attributes_for(:hall, name:, capacity:)
-      }
-    end
 
+    let(:params) {{ hall: attributes_for(:hall, name:, capacity:) }}
     let(:name) { "Sala #{Faker::Number.number(digits: 1)}" }
     let(:capacity) { Faker::Number.number(digits: 2) }
 
@@ -230,13 +226,9 @@ RSpec.describe "/halls", type: :request do
 
   describe "PATCH /halls/hall_id" do
     subject(:request) { patch("/halls/#{hall.id}", params:) }
+    
     let(:hall) { create :hall }
-    let(:params) do
-      {
-        hall: attributes_for(:hall, name:, capacity:)
-      }
-    end
-
+    let(:params) {{ hall: attributes_for(:hall, name:, capacity:) }}
     let(:name) { "Sala #{Faker::Number.number(digits: 1)}" }
     let(:capacity) { Faker::Number.number(digits: 2) }
 
