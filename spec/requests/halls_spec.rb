@@ -8,7 +8,7 @@ RSpec.describe "/halls", type: :request do
   describe "GET /halls" do
     context "when no user" do
       before { request }
-      
+
       it "redirects to sign_in" do
         expect(response).to redirect_to("/users/sign_in")
       end
@@ -19,7 +19,7 @@ RSpec.describe "/halls", type: :request do
     end
 
     context "when user without permission" do
-      before do 
+      before do
         sign_in user
         request
       end
@@ -34,7 +34,7 @@ RSpec.describe "/halls", type: :request do
     end
 
     context "when user with permission" do
-      before do 
+      before do
         sign_in manager
         request
       end
@@ -62,7 +62,7 @@ RSpec.describe "/halls", type: :request do
     end
 
     context "when user without permission" do
-      before do 
+      before do
         sign_in user
         request
       end
@@ -76,7 +76,7 @@ RSpec.describe "/halls", type: :request do
     end
 
     context "when user with permission" do
-      before do 
+      before do
         sign_in manager
         request
       end
@@ -93,7 +93,7 @@ RSpec.describe "/halls", type: :request do
   describe "POST /halls" do
     subject(:request) { post('/halls', params:) }
 
-    let(:params) {{ hall: attributes_for(:hall, name:, capacity:) }}
+    let(:params) { { hall: attributes_for(:hall, name:, capacity:) } }
     let(:name) { "Sala #{Faker::Number.number(digits: 1)}" }
     let(:capacity) { Faker::Number.number(digits: 2) }
 
@@ -113,7 +113,7 @@ RSpec.describe "/halls", type: :request do
     end
 
     context "when user without permission" do
-      before do 
+      before do
         sign_in user
         request
       end
@@ -131,7 +131,7 @@ RSpec.describe "/halls", type: :request do
     end
 
     context "when user with permission" do
-      before do 
+      before do
         sign_in manager
         request
       end
@@ -149,7 +149,7 @@ RSpec.describe "/halls", type: :request do
     end
 
     context "when capacity invalid" do
-      before do 
+      before do
         sign_in manager
         request
       end
@@ -165,7 +165,7 @@ RSpec.describe "/halls", type: :request do
     end
 
     context "when name invalid" do
-      before do 
+      before do
         sign_in manager
         request
       end
@@ -176,7 +176,7 @@ RSpec.describe "/halls", type: :request do
       end
 
       it "returns unsuccessful response" do
-        expect(response.status).to eq(422) 
+        expect(response.status).to eq(422)
       end
     end
   end
@@ -196,7 +196,7 @@ RSpec.describe "/halls", type: :request do
     end
 
     context "when user without permission" do
-      before do 
+      before do
         sign_in user
         request
       end
@@ -210,7 +210,7 @@ RSpec.describe "/halls", type: :request do
     end
 
     context "when user with permission" do
-      before do 
+      before do
         sign_in manager
         request
       end
@@ -228,7 +228,7 @@ RSpec.describe "/halls", type: :request do
     subject(:request) { patch("/halls/#{hall.id}", params:) }
 
     let(:hall) { create :hall }
-    let(:params) {{ hall: attributes_for(:hall, name:, capacity:) }}
+    let(:params) { { hall: attributes_for(:hall, name:, capacity:) } }
     let(:name) { "Sala #{Faker::Number.number(digits: 1)}" }
     let(:capacity) { Faker::Number.number(digits: 2) }
 
@@ -244,7 +244,7 @@ RSpec.describe "/halls", type: :request do
     end
 
     context "when user without permission" do
-      before do 
+      before do
         sign_in user
         request
       end
@@ -258,7 +258,7 @@ RSpec.describe "/halls", type: :request do
     end
 
     context "when user with permission" do
-      before do 
+      before do
         sign_in manager
         request
       end
@@ -271,19 +271,19 @@ RSpec.describe "/halls", type: :request do
       end
 
       it "updates hall record" do
-        expect(Hall.where(id: hall.id).pluck(:name)).to eq(["#{name}"])
+        expect(Hall.where(id: hall.id).pluck(:name)).to eq([name.to_s])
       end
     end
 
     context "when capacity invalid" do
-      before do 
+      before do
         sign_in manager
         request
       end
       let(:capacity) { "NotAnInteger" }
 
       it "doesn't update hall record" do
-        expect(Hall.where(id: hall.id).pluck(:name)).not_to eq(["#{name}"])
+        expect(Hall.where(id: hall.id).pluck(:name)).not_to eq([name.to_s])
       end
 
       it "returns unsuccessful response" do
@@ -292,14 +292,14 @@ RSpec.describe "/halls", type: :request do
     end
 
     context "when name invalid" do
-      before do 
+      before do
         sign_in manager
         request
       end
       let(:name) { nil }
 
       it "doesn't update hall record" do
-        expect(Hall.where(id: hall.id).pluck(:name)).not_to eq(["#{name}"])
+        expect(Hall.where(id: hall.id).pluck(:name)).not_to eq([name.to_s])
       end
 
       it "returns unsuccessful response" do
@@ -309,7 +309,7 @@ RSpec.describe "/halls", type: :request do
   end
 
   describe "DELETE /halls/hall_id" do
-    subject(:request) {  delete("/halls/#{hall.id}") }
+    subject(:request) { delete("/halls/#{hall.id}") }
     let(:hall) { create :hall }
     context "when no user" do
       before { request }
@@ -323,7 +323,7 @@ RSpec.describe "/halls", type: :request do
     end
 
     context "when user without permission" do
-      before do 
+      before do
         sign_in user
         request
       end
@@ -338,7 +338,7 @@ RSpec.describe "/halls", type: :request do
 
     context "when user with permission" do
       let(:admin) { create :user, email: "testadmin@test.com", role: 2 }
-      before do 
+      before do
         sign_in admin
         request
       end
