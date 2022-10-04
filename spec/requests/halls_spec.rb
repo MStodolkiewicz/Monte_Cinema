@@ -144,7 +144,7 @@ RSpec.describe "/halls", type: :request do
       end
 
       it "creates hall record" do
-        expect(Hall.count).to eq(1)
+        expect(Hall.where(id: assigns(:hall).id).count).to eq(1)
       end
     end
 
@@ -226,7 +226,7 @@ RSpec.describe "/halls", type: :request do
 
   describe "PATCH /halls/hall_id" do
     subject(:request) { patch("/halls/#{hall.id}", params:) }
-    
+
     let(:hall) { create :hall }
     let(:params) {{ hall: attributes_for(:hall, name:, capacity:) }}
     let(:name) { "Sala #{Faker::Number.number(digits: 1)}" }
