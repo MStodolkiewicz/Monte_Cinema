@@ -7,6 +7,14 @@ class ReservationPolicy < ApplicationPolicy
     user.id == @record.user_id || user.manager? || user.admin?
   end
 
+  def create_for_other_user?
+    user.manager? || user.admin?
+  end
+
+  def create_when_started?
+    user.manager? || user.admin?
+  end
+
   def create?
     true
   end

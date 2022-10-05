@@ -1,9 +1,11 @@
 <h1>Reservations</h1>
 
-<%= form_with url: "/reservations/find_by_user", method: :get do |form| %>
-  <%= form.label :email, "Search for:" %>
-  <%= form.text_field :email %>
-  <%= form.submit "Search" %>
+<% if policy(Reservation).find_by_user? %>
+  <%= form_with url: "/reservations/find_by_user", method: :get do |form| %>
+    <%= form.label :email, "Search for:" %>
+    <%= form.text_field :email %>
+    <%= form.submit "Search" %>
+  <% end %>
 <% end %>
 
 <div id="reservations">

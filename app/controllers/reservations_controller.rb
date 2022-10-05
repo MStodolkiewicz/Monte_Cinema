@@ -1,12 +1,15 @@
 class ReservationsController < ApplicationController
   include Pundit::Authorization
+  rescue_from ChangeStatusError, with: :change_status_error
+  rescue_from SeanceStartedError, with: :seance_started_error
+  rescue_from ActiveRecord::RecordNotFound, with: :user_not_found
 
   before_action :set_reservation, only: %i[show edit update destroy cancel confirm]
   before_action :authenticate_user!, except: %i[new create]
 
   def find_by_user
     authorize Reservation
-    reservations_for_user(find_user_by_email(params[:email]))
+    reservations_for_user(find_user_by_email!(params[:email]))
     render template: "reservations/index"
   end
 
@@ -43,6 +46,7 @@ class ReservationsController < ApplicationController
   def new
     authorize Reservation
     @reservation = Reservation.new(seance_id: params[:seance_id])
+    @reservation.email = current_user.email if current_user.present?
   end
 
   def edit
@@ -52,6 +56,8 @@ class ReservationsController < ApplicationController
   def create
     authorize Reservation
     @reservation = Reservation.new(reservation_params)
+    update_reservation_user if current_user.present?
+    seanse_started?
 
     respond_to do |format|
       if @reservation.save
@@ -97,6 +103,10 @@ class ReservationsController < ApplicationController
     params.require(:reservation).permit(:seance_id, :email)
   end
 
+  def find_user_by_email!(email)
+    User.find_by!(email:)
+  end
+
   def find_user_by_email(email)
     User.find_by(email:)
   end
@@ -117,5 +127,39 @@ class ReservationsController < ApplicationController
         format.json { render json: @reservation.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  def seanse_started?
+    @seance = Seance.find(@reservation.seance_id)
+    if current_user.present? && policy(Reservation).create_when_started?
+      raise SeanceStartedError if @seance.start_time <= -15.minutes.from_now
+    elsif @seance.start_time <= 30.minutes.from_now
+      raise SeanceStartedError
+    end
+  end
+
+  def update_reservation_user
+    if policy(Reservation).create_for_other_user?
+      user = find_user_by_email(@reservation.email)
+      @reservation.user_id = user.id if user.present?
+      @reservation.status = "confirmed"
+    else
+      @reservation.user_id = current_user.id
+    end
+  end
+
+  def change_status_error
+    flash[:alert] = "Cannot update status."
+    redirect_back(fallback_location: reservations_path)
+  end
+
+  def seance_started_error
+    flash[:alert] = "Reservations for this seance already closed"
+    redirect_back(fallback_location: root_path)
+  end
+
+  def user_not_found
+    flash[:alert] = "No user with given email"
+    redirect_back(fallback_location: root_path)
   end
 end

@@ -1,0 +1,1 @@
+class SeanceStartedError < StandardError; end
