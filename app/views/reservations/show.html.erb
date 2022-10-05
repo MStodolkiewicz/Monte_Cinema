@@ -2,9 +2,13 @@
   <%= render @reservation %>
 
   <div>
-    <%= link_to "Edit this reservation", edit_reservation_path(@reservation), class: "btn btn-outline-secondary" %>
+    <% if policy(@reservation).edit? %>
+      <%= link_to "Edit", edit_reservation_path(@reservation), class: "btn btn-outline-secondary" %> 
+    <% end %>
+    <% if policy(@reservation).destroy? %>
+      <%= button_to "Destroy", @reservation, method: :delete,
+        form_class: "myButtonForm", class: "btn btn-outline-danger"  %>
+    <% end %>
     <%= link_to "Back to reservations", reservations_path, class: "btn btn-outline-secondary" %>
-
-    <%= button_to "Destroy this reservation", @reservation, method: :delete, class: "btn btn-outline-danger" %>
   </div>
 </div>

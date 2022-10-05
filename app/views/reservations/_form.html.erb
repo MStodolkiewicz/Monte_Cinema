@@ -11,14 +11,11 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :seance_id, style: "display: block" %>
-    <%= form.text_field :seance_id %>
-  </div>
+  <%= form.hidden_field :seance_id %>
 
   <div>
-    <%= form.label :user_id, style: "display: block" %>
-    <%= form.text_field :user_id %>
+    <%= form.label :email, style: "display: block" %>
+    <%= form.text_field :email %>
   </div>
 
   <div style="margin-top: 1%">

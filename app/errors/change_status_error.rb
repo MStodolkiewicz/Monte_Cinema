@@ -1,0 +1,1 @@
+class ChangeStatusError < StandardError; end
