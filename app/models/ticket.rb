@@ -4,6 +4,7 @@ class Ticket < ApplicationRecord
   validate :seat_over_capacity?
 
   private
+
   def seat_over_capacity?
     errors.add(seat: 'Seat is over the hall capacity') unless seat <= reservation.seance.hall.capacity
   end

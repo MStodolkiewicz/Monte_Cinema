@@ -47,7 +47,7 @@ class ReservationsController < ApplicationController
 
   def new
     authorize Reservation
-    @reservation = Reservation.new(seance_id: params[:seance_id]) 
+    @reservation = Reservation.new(seance_id: params[:seance_id])
     params_for_new
   end
 
@@ -97,8 +97,8 @@ class ReservationsController < ApplicationController
 
   def taken_seats(seance_id)
     @taken_seats = []
-    Reservation.where(seance_id: seance_id).order(seats: :asc).pluck(:seats).each do |seat|
-      @taken_seats = @taken_seats | seat
+    Reservation.where(seance_id:).order(seats: :asc).pluck(:seats).each do |seat|
+      @taken_seats |= seat
     end
   end
 
@@ -114,7 +114,7 @@ class ReservationsController < ApplicationController
   end
 
   def seats_not_duplicated?
-    raise SeatsDuplicatedError if @reservation.seats.detect{ |distinct| @reservation.seats.count(distinct) > 1 }
+    raise SeatsDuplicatedError if @reservation.seats.detect { |distinct| @reservation.seats.count(distinct) > 1 }
   end
 
   def params_for_new
@@ -191,7 +191,7 @@ class ReservationsController < ApplicationController
 
   def create_tickets
     @reservation.seats.each do |seat|
-      Ticket.create!(reservation_id: @reservation.id, seat: seat)
+      Ticket.create!(reservation_id: @reservation.id, seat:)
     end
   end
 
