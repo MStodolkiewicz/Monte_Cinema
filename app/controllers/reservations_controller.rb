@@ -2,6 +2,9 @@ class ReservationsController < ApplicationController
   include Pundit::Authorization
   rescue_from ChangeStatusError, with: :change_status_error
   rescue_from SeanceStartedError, with: :seance_started_error
+  rescue_from SeatTakenError, with: :seat_taken
+  rescue_from TooManyTicketsError, with: :too_many_tickets
+  rescue_from SeatsDuplicatedError, with: :seats_duplicated
   rescue_from ActiveRecord::RecordNotFound, with: :user_not_found
 
   before_action :set_reservation, only: %i[show edit update destroy cancel confirm]
@@ -15,8 +18,7 @@ class ReservationsController < ApplicationController
 
   def find_by_seance
     authorize Reservation
-    @reservations = Reservation.where(seance_id: params[:seance_id])
-                               .includes([:user, { seance: [:movie] }])
+    @reservations = reservations_for_seance(params[:seance_id])
     render template: "reservations/index"
   end
 
@@ -45,8 +47,8 @@ class ReservationsController < ApplicationController
 
   def new
     authorize Reservation
-    @reservation = Reservation.new(seance_id: params[:seance_id])
-    @reservation.email = current_user.email if current_user.present?
+    @reservation = Reservation.new(seance_id: params[:seance_id]) 
+    params_for_new
   end
 
   def edit
@@ -57,17 +59,15 @@ class ReservationsController < ApplicationController
     authorize Reservation
     @reservation = Reservation.new(reservation_params)
     update_reservation_user if current_user.present?
-    seanse_started?
+    seance_and_seats_valid?
 
-    respond_to do |format|
-      if @reservation.save
-        format.html { redirect_to root_path, notice: "Reservation was successfully created." }
-        format.json { render :show, status: :created, location: @reservation }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @reservation.errors, status: :unprocessable_entity }
-      end
+    Reservation.transaction do
+      @reservation.save!
+      create_tickets
+    rescue StandardError
+      redirect_to root_path, alert: 'Reservation was not created' and return
     end
+    redirect_to root_path, notice: 'Reservation was successfully created.'
   end
 
   def update
@@ -95,12 +95,48 @@ class ReservationsController < ApplicationController
 
   private
 
+  def taken_seats(seance_id)
+    @taken_seats = []
+    Reservation.where(seance_id: seance_id).order(seats: :asc).pluck(:seats).each do |seat|
+      @taken_seats = @taken_seats | seat
+    end
+  end
+
+  def seats_already_reserved?
+    taken_seats(@reservation.seance_id)
+    @reservation.seats.each do |seat|
+      raise SeatTakenError if @taken_seats.include?(seat)
+    end
+  end
+
+  def number_of_seats_correct?
+    raise TooManyTicketsError if @reservation.seats.count > 10
+  end
+
+  def seats_not_duplicated?
+    raise SeatsDuplicatedError if @reservation.seats.detect{ |distinct| @reservation.seats.count(distinct) > 1 }
+  end
+
+  def params_for_new
+    @reservation.email = current_user.email if current_user.present?
+    taken_seats(params[:seance_id])
+    @capacity = Seance.where(id: params[:seance_id])
+                      .includes(:hall).pluck(:capacity)
+  end
+
+  def seance_and_seats_valid?
+    seanse_started?
+    seats_already_reserved?
+    number_of_seats_correct?
+    seats_not_duplicated?
+  end
+
   def set_reservation
     @reservation = Reservation.find(params[:id])
   end
 
   def reservation_params
-    params.require(:reservation).permit(:seance_id, :email)
+    params.require(:reservation).permit(:seance_id, :email, seats: [])
   end
 
   def find_user_by_email!(email)
@@ -115,6 +151,11 @@ class ReservationsController < ApplicationController
     @reservations = Reservation.where(user_id:)
                                .joins(:seance).includes([:user, { seance: [:movie] }])
                                .order(start_time: :desc)
+  end
+
+  def reservations_for_seance(seance_id)
+    Reservation.where(seance_id:)
+               .includes({ seance: [:movie] })
   end
 
   def change_status(status)
@@ -148,6 +189,12 @@ class ReservationsController < ApplicationController
     end
   end
 
+  def create_tickets
+    @reservation.seats.each do |seat|
+      Ticket.create!(reservation_id: @reservation.id, seat: seat)
+    end
+  end
+
   def change_status_error
     flash[:alert] = "Cannot update status."
     redirect_back(fallback_location: reservations_path)
@@ -160,6 +207,21 @@ class ReservationsController < ApplicationController
 
   def user_not_found
     flash[:alert] = "No user with given email"
+    redirect_back(fallback_location: root_path)
+  end
+
+  def seat_taken
+    flash[:alert] = "At least one of the seats is already reserved"
+    redirect_back(fallback_location: root_path)
+  end
+
+  def too_many_tickets
+    flash[:alert] = "Max 10 tickets per reservation allowed"
+    redirect_back(fallback_location: root_path)
+  end
+
+  def seats_duplicated
+    flash[:alert] = "At least one of the seats was duplicated"
     redirect_back(fallback_location: root_path)
   end
 end

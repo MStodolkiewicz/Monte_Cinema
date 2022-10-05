@@ -1,0 +1,1 @@
+class SeatsDuplicatedError < StandardError; end

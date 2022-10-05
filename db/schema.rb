@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_26_113946) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_05_121427) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -43,6 +43,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_26_113946) do
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "seats", array: true
     t.index ["seance_id"], name: "index_reservations_on_seance_id"
     t.index ["user_id"], name: "index_reservations_on_user_id"
   end
@@ -57,6 +58,14 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_26_113946) do
     t.datetime "updated_at", null: false
     t.index ["hall_id"], name: "index_seances_on_hall_id"
     t.index ["movie_id"], name: "index_seances_on_movie_id"
+  end
+
+  create_table "tickets", force: :cascade do |t|
+    t.integer "seat", null: false
+    t.bigint "reservation_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["reservation_id"], name: "index_tickets_on_reservation_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -76,4 +85,5 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_26_113946) do
   add_foreign_key "reservations", "users"
   add_foreign_key "seances", "halls"
   add_foreign_key "seances", "movies"
+  add_foreign_key "tickets", "reservations"
 end

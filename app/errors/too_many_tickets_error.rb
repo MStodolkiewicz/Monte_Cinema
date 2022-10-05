@@ -1,0 +1,1 @@
+class TooManyTicketsError < StandardError; end

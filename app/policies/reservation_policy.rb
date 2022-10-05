@@ -24,7 +24,7 @@ class ReservationPolicy < ApplicationPolicy
   end
 
   def update?
-    user.id == @record.user_id || user.manager? || user.admin?
+    user.manager? || user.admin?
   end
 
   def edit?
