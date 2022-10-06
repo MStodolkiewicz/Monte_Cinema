@@ -48,11 +48,13 @@ class ReservationsController < ApplicationController
   def new
     authorize Reservation
     @reservation = Reservation.new(seance_id: params[:seance_id])
-    params_for_new
+    @reservation.email = current_user.email if current_user.present?
+    params_for_form(params[:seance_id])
   end
 
   def edit
     authorize @reservation
+    params_for_form(@reservation.seance_id)
   end
 
   def create
@@ -72,6 +74,7 @@ class ReservationsController < ApplicationController
 
   def update
     authorize @reservation
+    seance_and_seats_valid?
     respond_to do |format|
       if @reservation.update(reservation_params)
         format.html { redirect_to reservation_url(@reservation), notice: "Reservation was successfully updated." }
@@ -97,9 +100,12 @@ class ReservationsController < ApplicationController
 
   def taken_seats(seance_id)
     @taken_seats = []
-    Reservation.where(seance_id:).order(seats: :asc).pluck(:seats).each do |seat|
+    Reservation.where(seance_id:).where.not(status: :canceled)
+               .where.not(id: @reservation.id)
+               .order(seats: :asc).pluck(:seats).each do |seat|
       @taken_seats |= seat
     end
+    @taken_seats.sort!
   end
 
   def seats_already_reserved?
@@ -117,10 +123,9 @@ class ReservationsController < ApplicationController
     raise SeatsDuplicatedError if @reservation.seats.detect { |distinct| @reservation.seats.count(distinct) > 1 }
   end
 
-  def params_for_new
-    @reservation.email = current_user.email if current_user.present?
-    taken_seats(params[:seance_id])
-    @capacity = Seance.where(id: params[:seance_id])
+  def params_for_form(seance_id)
+    taken_seats(seance_id)
+    @capacity = Seance.where(id: seance_id)
                       .includes(:hall).pluck(:capacity)
   end
 
@@ -149,7 +154,7 @@ class ReservationsController < ApplicationController
 
   def reservations_for_user(user_id)
     @reservations = Reservation.where(user_id:)
-                               .joins(:seance).includes([:user, { seance: [:movie] }])
+                               .joins(:seance).includes({ seance: [:movie] })
                                .order(start_time: :desc)
   end
 

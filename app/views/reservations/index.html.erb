@@ -13,6 +13,9 @@
     <div class="border border-dark" style="margin-bottom:2%;">
       <%= render reservation %>
       <p>
+        <% if policy(reservation).show? %>
+          <%= link_to "Show", reservation_path(reservation), class: "btn btn-outline-secondary" %> 
+        <% end %>
         <% if reservation.status == "reserved" %>
           <% if policy(reservation).cancel? %>
             <%= button_to "Cancel this reservation", cancel_reservation_path(id: reservation.id), method: :patch, class: "btn btn-outline-danger" %>
