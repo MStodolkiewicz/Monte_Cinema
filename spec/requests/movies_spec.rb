@@ -82,7 +82,7 @@ RSpec.describe "/movies", type: :request do
     end
 
     let(:name) { Faker::Movie.title }
-    let(:duration) { 95 }
+    let(:duration) { Faker::Number.number(digits: 2) }
 
     context "when no user" do
       it "redirects to sign_in" do
@@ -147,7 +147,7 @@ RSpec.describe "/movies", type: :request do
         expect(response.status).to eq(422)
       end
 
-      let(:duration) { 60 }
+      let(:duration) { Faker::Number.number(digits: 2) }
       let(:name) { nil }
 
       it "doesn't create movie record" do
@@ -215,7 +215,7 @@ RSpec.describe "/movies", type: :request do
     end
 
     let(:name) { Faker::Movie.title }
-    let(:duration) { 120 }
+    let(:duration) { Faker::Number.number(digits: 2) }
 
     context "when no user" do
       it "redirects to sign_in" do
@@ -255,7 +255,7 @@ RSpec.describe "/movies", type: :request do
       end
 
       it "updates movie record" do
-        expect { patch("/movies/#{movie.id}", params:) }.to change { movie.reload.name }.from(movie.name).to("#{name}")
+        expect { patch("/movies/#{movie.id}", params:) }.to change { movie.reload.name }.from(movie.name).to(name.to_s)
       end
     end
 
@@ -272,7 +272,7 @@ RSpec.describe "/movies", type: :request do
         expect(response.status).to eq(422)
       end
 
-      let(:duration) { 60 }
+      let(:duration) { Faker::Number.number(digits: 2) }
       let(:name) { nil }
 
       it "doesn't create movie record" do
