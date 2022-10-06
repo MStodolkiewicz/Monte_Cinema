@@ -5,120 +5,117 @@ RSpec.describe "/seances", type: :request do
   let(:manager) { create :user, email: "testmanager@test.com", role: :manager }
 
   describe "GET /seances/new" do
+    subject(:request) { get('/seances/new') }
     context "when no user" do
+      before { request }
       it "redirects to sign_in" do
-        get("/seances/new")
         expect(response).to redirect_to("/users/sign_in")
       end
 
       it "returns redirect status" do
-        get("/seances/new")
         expect(response.status).to eq(302)
       end
     end
 
     context "when user without permission" do
-      before { sign_in user }
+      before do
+        sign_in user
+        request
+      end
       it "redirects to root" do
-        get("/seances/new")
         expect(response).to redirect_to("/")
       end
 
       it "returns redirect status" do
-        get("/seances/new")
         expect(response.status).to eq(302)
       end
     end
 
     context "when user with permission" do
-      before { sign_in manager }
+      before do
+        sign_in manager
+        request
+      end
       it "returns successful response" do
-        get("/seances/new")
         expect(response.status).to eq(200)
       end
 
       it "renders proper template" do
-        get("/seances/new")
         expect(response).to render_template("seances/new")
       end
     end
   end
 
   describe "POST /seances" do
-    let(:params) do
-      {
-        seance: {
-          start_time:,
-          price:,
-          movie_id:,
-          hall_id:
-        }
-      }
-    end
+    subject(:request) { post('/seances', params:) }
+    
     let(:movie) { create :movie }
     let(:hall) { create :hall }
 
-    let(:hall_id) { hall.id }
-    let(:movie_id) { movie.id }
+    let(:params) { { seance: attributes_for(:seance, start_time: DateTime.current, price:, movie_id: movie.id, hall_id: hall.id ) } }
+
     let(:price) { Faker::Number.number(digits: 2) }
-    let(:start_time) { DateTime.current }
 
     context "when no user" do
+      before { request }
       it "redirects to sign_in" do
-        post("/seances")
         expect(response).to redirect_to("/users/sign_in")
       end
 
       it "returns redirect status" do
-        post("/seances")
         expect(response.status).to eq(302)
       end
 
       it "does not create a seance record" do
-        expect { post("/seances", params:) }.not_to change(Seance, :count)
+        expect(Seance.count).to eq(0)
       end
     end
 
     context "when user without permission" do
-      before { sign_in user }
+      before do
+        sign_in user
+        request
+      end
       it "redirects to root" do
-        post("/seances", params:)
         expect(response).to redirect_to("/")
       end
 
       it "returns redirect status" do
-        post("/seances")
         expect(response.status).to eq(302)
       end
 
       it "does not create a seance record" do
-        expect { post("/seances", params:) }.not_to change(Seance, :count)
+        expect(Seance.count).to eq(0)
       end
     end
 
     context "when user with permission" do
-      before { sign_in manager }
+      before do
+        sign_in manager
+        request
+      end
       it "returns redirect status" do
-        post("/seances", params:)
         expect(response.status).to eq(302)
       end
 
       it "redirects to /movies/movie_id" do
-        post("/seances", params:)
-        expect(response).to redirect_to("/movies/#{movie_id}")
+        expect(response).to redirect_to("/movies/#{movie.id}")
       end
 
       it "creates seance record" do
-        expect { post("/seances", params:) }.to change(Seance, :count).by(1)
+        expect(Seance.where(id: assigns(:seance).id).count).to eq(1)
       end
     end
 
-    context "when params invalid" do
-      before { sign_in manager }
+    context "when price invalid" do
+      before do
+        sign_in manager
+        request
+      end
       let(:price) { nil }
 
       it "doesn't create seance record" do
-        expect { post("/seances", params:) }.not_to change(Seance, :count)
+        expect(Seance.count).to eq(0)
       end
 
       it "returns unsuccessful response" do
@@ -128,15 +125,17 @@ RSpec.describe "/seances", type: :request do
     end
 
     context "when hall used" do
-      before { sign_in manager }
+      before do
+        sign_in manager
+        request
+      end
 
       it "doesn't create seance record" do
         post("/seances", params:)
-        expect { post("/seances", params:) }.not_to change(Seance, :count)
+        expect(Seance.count).to eq(1)
       end
 
       it "returns unsuccessful response" do
-        post("/seances", params:)
         post("/seances", params:)
         expect(response.status).to eq(422)
       end
@@ -144,189 +143,188 @@ RSpec.describe "/seances", type: :request do
   end
 
   describe "GET /seances/seance_id/edit" do
+    subject(:request) { get("/seances/#{seance.id}/edit") }
     let(:seance) { create :seance }
     context "when no user" do
+      before { request }
       it "redirects to sign_in" do
-        get("/seances/#{seance.id}/edit")
         expect(response).to redirect_to("/users/sign_in")
       end
 
       it "returns redirect status" do
-        get("/seances/#{seance.id}/edit")
         expect(response.status).to eq(302)
       end
     end
 
     context "when user without permission" do
-      before { sign_in user }
+      before do
+        sign_in user
+        request
+      end
       it "redirects to root" do
-        get("/seances/#{seance.id}/edit")
         expect(response).to redirect_to("/")
       end
 
       it "returns redirect status" do
-        get("/seances/#{seance.id}/edit")
         expect(response.status).to eq(302)
       end
     end
 
     context "when user with permission" do
-      before { sign_in manager }
+      before do
+        sign_in manager
+        request
+      end
       it "returns successful response" do
-        get("/seances/#{seance.id}/edit")
         expect(response.status).to eq(200)
       end
 
       it "renders proper template" do
-        get("/seances/#{seance.id}/edit")
         expect(response).to render_template("seances/edit")
       end
     end
   end
 
   describe "PATCH /seances/seance_id" do
+    subject(:request) { patch("/seances/#{seance.id}", params:) }
     let(:seance) { create :seance }
-    let(:params) do
-      {
-        seance: {
-          start_time:,
-          price:,
-          movie_id:,
-          hall_id:
-        }
-      }
-    end
+
+    let(:params) { { seance: attributes_for(:seance, start_time:, price:, movie_id: movie.id, hall_id: hall.id ) } }
     let(:movie) { create :movie }
     let(:hall) { create :hall }
 
-    let(:hall_id) { hall.id }
-    let(:movie_id) { movie.id }
     let(:price) { Faker::Number.number(digits: 2) }
     let(:start_time) { DateTime.current }
 
     context "when no user" do
+      before { request }
       it "redirects to sign_in" do
-        patch("/seances/#{seance.id}", params:)
         expect(response).to redirect_to("/users/sign_in")
       end
 
       it "returns redirect status" do
-        patch("/seances/#{seance.id}")
         expect(response.status).to eq(302)
       end
     end
 
     context "when user without permission" do
-      before { sign_in user }
+      before do
+        sign_in user
+        request
+      end
       it "redirects to root" do
-        patch("/seances/#{seance.id}", params:)
         expect(response).to redirect_to("/")
       end
 
       it "returns redirect status" do
-        patch("/seances/#{seance.id}")
         expect(response.status).to eq(302)
       end
     end
 
     context "when user with permission" do
-      before { sign_in manager }
+      before do
+        sign_in manager
+        request
+      end
       it "returns redirect status" do
-        patch("/seances/#{seance.id}", params:)
         expect(response.status).to eq(302)
       end
 
       it "redirects to /movies/movie_id" do
-        patch("/seances/#{seance.id}", params:)
-        expect(response).to redirect_to("/movies/#{movie_id}")
+        expect(response).to redirect_to("/movies/#{movie.id}")
       end
 
       it "updates seance price" do
-        expect { patch("/seances/#{seance.id}", params:) }.to change {
-                                                                seance.reload.price
-                                                              }.from(seance.price).to(price)
+        expect(Seance.where(id: seance.id).pluck(:price)).to eq([price])
       end
       it "updates movie" do
-        expect { patch("/seances/#{seance.id}", params:) }.to change {
-                                                                seance.reload.movie_id
-                                                              }.from(seance.movie_id).to(movie_id)
+        expect(Seance.where(id: seance.id).pluck(:movie_id)).to eq([movie.id])
       end
       it "updates hall" do
-        expect { patch("/seances/#{seance.id}", params:) }.to change {
-                                                                seance.reload.hall_id
-                                                              }.from(seance.hall_id).to(hall_id)
+        expect(Seance.where(id: seance.id).pluck(:hall_id)).to eq([hall.id])
       end
     end
 
-    context "when params invalid" do
-      before { sign_in manager }
+    context "when price invalid" do
+      before do
+        sign_in manager
+        request
+      end
       let(:price) { "s" }
 
       it "doesn't update seance record" do
-        expect { patch("/seances/#{seance.id}", params:) }.not_to(change { seance.reload.price })
+        expect(Seance.where(id: seance.id).pluck(:price)).not_to eq([price])
       end
 
       it "returns unsuccessful response" do
-        patch("/seances/#{seance.id}", params:)
         expect(response.status).to eq(422)
       end
+    end
 
-      let(:price) { Faker::Number.number(digits: 2) }
+    context "when start_time invalid" do
+      before do
+        sign_in manager
+        request
+      end
+
       let(:start_time) { nil }
 
       it "doesn't update seance record" do
-        expect { patch("/seances/#{seance.id}", params:) }.not_to(change { seance.reload.start_time })
+        expect(Seance.where(id: seance.id).pluck(:start_time)).not_to eq([start_time])
       end
 
       it "returns unsuccessful response" do
-        patch("/seances/#{seance.id}", params:)
         expect(response.status).to eq(422)
       end
     end
   end
 
   describe "DELETE /seances/seance_id" do
+    subject(:request) { delete("/seances/#{seance.id}") }
     let(:seance) { create :seance }
+
     context "when no user" do
+      before { request }
       it "redirects to sign_in" do
-        delete("/seances/#{seance.id}")
         expect(response).to redirect_to("/users/sign_in")
       end
 
       it "returns redirect status" do
-        delete("/seances/#{seance.id}")
         expect(response.status).to eq(302)
       end
     end
 
     context "when user without permission" do
-      before { sign_in user }
+      before do
+        sign_in user
+        request
+      end
       it "redirects to root" do
-        delete("/seances/#{seance.id}")
         expect(response).to redirect_to("/")
       end
 
       it "returns redirect status" do
-        delete("/seances/#{seance.id}")
         expect(response.status).to eq(302)
       end
     end
 
     context "when user with permission" do
       let(:admin) { create :user, email: "testadmin@test.com", role: 2 }
-      before { sign_in admin }
+      before do
+        sign_in admin
+        request
+      end
+
       it "returns redirect status" do
-        delete("/seances/#{seance.id}")
         expect(response.status).to eq(302)
       end
 
       it "redirects to /movies/movie_id" do
-        delete("/seances/#{seance.id}")
         expect(response).to redirect_to("/movies/#{seance.movie_id}")
       end
 
       it "destroy seance record" do
-        expect { delete("/seances/#{seance.id}") }.not_to change(Seance, :count)
+        expect(Seance.where(id: seance.id).count).to eq(0)
       end
     end
   end
