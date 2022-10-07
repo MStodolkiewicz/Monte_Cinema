@@ -20,11 +20,10 @@ RSpec.describe CancelReservationsJob, type: :job do
     context 'when seance starts more than 30 minutes from now' do
       let(:seance) { create :seance, start_time: 35.minute.from_now }
       it 'does not cancel reservation' do
-        expect { described_class.perform_now }.not_to change { reservation.status }
+        expect { described_class.perform_now }.not_to(change { reservation.status })
       end
     end
   end
-
 
   describe 'perform_later' do
     it 'enqueues job' do
