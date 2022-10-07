@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     end
   end 
   resources :seances
-  resources :reservations do
+  resources :reservations, except: [:edit, :update] do
     collection do
       get '/find_by_user', to: "reservations#find_by_user"
       get '/find_by_seance', to: "reservations#find_by_seance"

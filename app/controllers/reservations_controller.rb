@@ -2,12 +2,11 @@ class ReservationsController < ApplicationController
   include Pundit::Authorization
   rescue_from ChangeStatusError, with: :change_status_error
   rescue_from SeanceStartedError, with: :seance_started_error
-  rescue_from SeatTakenError, with: :seat_taken
   rescue_from TooManyTicketsError, with: :too_many_tickets
   rescue_from SeatsDuplicatedError, with: :seats_duplicated
   rescue_from ActiveRecord::RecordNotFound, with: :user_not_found
 
-  before_action :set_reservation, only: %i[show edit update destroy cancel confirm]
+  before_action :set_reservation, only: %i[show destroy cancel confirm]
   before_action :authenticate_user!, except: %i[new create]
 
   def find_by_user
@@ -52,11 +51,6 @@ class ReservationsController < ApplicationController
     params_for_form(params[:seance_id])
   end
 
-  def edit
-    authorize @reservation
-    params_for_form(@reservation.seance_id)
-  end
-
   def create
     authorize Reservation
     @reservation = Reservation.new(reservation_params)
@@ -70,20 +64,6 @@ class ReservationsController < ApplicationController
       redirect_to movie_path(@reservation.seance.movie_id), alert: error.record.errors.full_messages and return
     end
     redirect_to root_path, notice: 'Reservation was successfully created.'
-  end
-
-  def update
-    authorize @reservation
-    seance_and_seats_valid?
-    respond_to do |format|
-      if @reservation.update(reservation_params)
-        format.html { redirect_to reservation_url(@reservation), notice: "Reservation was successfully updated." }
-        format.json { render :show, status: :ok, location: @reservation }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @reservation.errors, status: :unprocessable_entity }
-      end
-    end
   end
 
   def destroy
@@ -204,11 +184,6 @@ class ReservationsController < ApplicationController
 
   def user_not_found
     flash[:alert] = "No user with given email"
-    redirect_back(fallback_location: root_path)
-  end
-
-  def seat_taken
-    flash[:alert] = "At least one of the seats is already reserved"
     redirect_back(fallback_location: root_path)
   end
 
