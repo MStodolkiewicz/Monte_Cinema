@@ -18,6 +18,25 @@
     <%= form.text_field :email %>
   </div>
 
+  <p>
+    <strong>Hall seats:</strong>
+    <%= "1 to #{@capacity}" %>
+  </p>
+
+  <p>
+    <strong>Seats taken:</strong>
+    <%= @taken_seats %>
+  </p>
+
+  <div id="newSeat" style="margin-top: 1%;" class="btn" > + </div>
+
+  <div id="seats">
+    <div id="seat">
+      <%= form.label :seats, style: "display: block" %>
+      <%= form.number_field :seats, multiple: true%>
+    </div>
+  </div>
+
   <div style="margin-top: 1%">
     <%= form.submit class: 'btn btn-outline-success'%>
   </div>
@@ -30,3 +49,13 @@
     <%= link_to "Back to reservations", reservations_path, class: "btn btn-outline-secondary" %>
   </div>
 <% end %>
+
+<script>
+  var count = 1;
+  document.getElementById("newSeat").onclick = function(){
+    if (count < 15){
+      document.getElementById("seats").appendChild(document.getElementById("seat").cloneNode(true));
+      count++;
+    }
+  }
+</script>
