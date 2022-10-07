@@ -66,8 +66,8 @@ class ReservationsController < ApplicationController
     Reservation.transaction do
       @reservation.save!
       create_tickets
-    rescue StandardError
-      redirect_to root_path, alert: 'Reservation was not created' and return
+    rescue ActiveRecord::RecordInvalid => error
+      redirect_to movie_path(@reservation.seance.movie_id), alert: error.record.errors.full_messages and return
     end
     redirect_to root_path, notice: 'Reservation was successfully created.'
   end
@@ -108,13 +108,6 @@ class ReservationsController < ApplicationController
     @taken_seats.sort!
   end
 
-  def seats_already_reserved?
-    taken_seats(@reservation.seance_id)
-    @reservation.seats.each do |seat|
-      raise SeatTakenError if @taken_seats.include?(seat)
-    end
-  end
-
   def number_of_seats_correct?
     raise TooManyTicketsError if @reservation.seats.count > 10
   end
@@ -131,7 +124,6 @@ class ReservationsController < ApplicationController
 
   def seance_and_seats_valid?
     seanse_started?
-    seats_already_reserved?
     number_of_seats_correct?
     seats_not_duplicated?
   end
