@@ -23,6 +23,6 @@ class Ticket < ApplicationRecord
   end
 
   def seat_reserved?
-    Ticket.joins(:reservation).where(reservation: {seance_id: reservation.seance_id}).pluck(:seat).include?(seat)
+    Ticket.joins(:reservation).where(reservation: { seance_id: reservation.seance_id }).pluck(:seat).include?(seat)
   end
 end

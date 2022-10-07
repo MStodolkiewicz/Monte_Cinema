@@ -60,8 +60,8 @@ class ReservationsController < ApplicationController
     Reservation.transaction do
       @reservation.save!
       create_tickets
-    rescue ActiveRecord::RecordInvalid => error
-      redirect_to movie_path(@reservation.seance.movie_id), alert: error.record.errors.full_messages and return
+    rescue ActiveRecord::RecordInvalid => e
+      redirect_to movie_path(@reservation.seance.movie_id), alert: e.record.errors.full_messages and return
     end
     redirect_to root_path, notice: 'Reservation was successfully created.'
   end
