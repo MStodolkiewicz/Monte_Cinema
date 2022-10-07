@@ -48,11 +48,13 @@ RSpec.describe "/seances", type: :request do
 
   describe "POST /seances" do
     subject(:request) { post('/seances', params:) }
-    
+
     let(:movie) { create :movie }
     let(:hall) { create :hall }
 
-    let(:params) { { seance: attributes_for(:seance, start_time: DateTime.current, price:, movie_id: movie.id, hall_id: hall.id ) } }
+    let(:params) do
+      { seance: attributes_for(:seance, start_time: DateTime.current, price:, movie_id: movie.id, hall_id: hall.id) }
+    end
 
     let(:price) { Faker::Number.number(digits: 2) }
 
@@ -189,7 +191,7 @@ RSpec.describe "/seances", type: :request do
     subject(:request) { patch("/seances/#{seance.id}", params:) }
     let(:seance) { create :seance }
 
-    let(:params) { { seance: attributes_for(:seance, start_time:, price:, movie_id: movie.id, hall_id: hall.id ) } }
+    let(:params) { { seance: attributes_for(:seance, start_time:, price:, movie_id: movie.id, hall_id: hall.id) } }
     let(:movie) { create :movie }
     let(:hall) { create :hall }
 
