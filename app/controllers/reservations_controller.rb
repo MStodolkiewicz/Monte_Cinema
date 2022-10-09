@@ -63,6 +63,7 @@ class ReservationsController < ApplicationController
     rescue ActiveRecord::RecordInvalid => e
       redirect_to movie_path(@reservation.seance.movie_id), alert: e.record.errors.full_messages and return
     end
+    ReservationMailer.reservation_created(@reservation.id).deliver_later
     redirect_to root_path, notice: 'Reservation was successfully created.'
   end
 
