@@ -1,11 +1,17 @@
+require 'sidekiq/web'
+require 'sidekiq/cron/web'
+
 Rails.application.routes.draw do
+  authenticate :user, ->(u) { u.admin? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
   devise_for :users
   root 'movies#index'
   resources :movies do
-    resources :seances, except: [:show, :index] do
+    resources :seances, except: %i[show index] do
       resources :reservations
     end
-  end 
+  end
   resources :seances
   resources :reservations, except: [:edit, :update] do
     collection do

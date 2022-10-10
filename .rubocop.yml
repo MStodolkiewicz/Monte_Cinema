@@ -1,8 +1,8 @@
 AllCops:
   Exclude:
-    - db/**/*
     - bin/**/*
-    - config/**/*
+    - db/migrate/*
+    - db/schema.rb
 Style/Documentation:
   Enabled: false
 Style/FrozenStringLiteralComment:

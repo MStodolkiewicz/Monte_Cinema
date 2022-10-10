@@ -1,0 +1,3 @@
+cancel_reservation_job:
+  cron: '*/5 * * * *'
+  class: 'CancelReservationsJob'
