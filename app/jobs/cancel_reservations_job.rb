@@ -4,6 +4,7 @@ class CancelReservationsJob < ApplicationJob
   def perform
     pending_reservations.each do |reservation|
       reservation.update(status: :canceled)
+      ReservationMailer.reservation_canceled(reservation).deliver_later
     end
   end
 
