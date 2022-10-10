@@ -10,18 +10,18 @@ Hall.create(name: 'Hall 9', capacity: 100)
 Hall.create(name: 'Hall 10', capacity: 200)
 
 10.times do
-    Movie.create(
-        name: Faker::Movie.title,
-        description:  Faker::Movie.quote,
-        duration: rand(100) + 90
-    )
+  Movie.create(
+    name: Faker::Movie.title,
+    description: Faker::Movie.quote,
+    duration: rand(90..189)
+  )
 end
 
 500.times do
-    Seance.create(
-        movie_id: Movie.all.sample.id,
-        hall_id: Hall.all.sample.id,
-        start_time: DateTime.current.beginning_of_minute + rand(14).days + rand(24).hours + rand(60).minutes,
-        price: rand(10) + 15
-    )
+  Seance.create(
+    movie_id: Movie.all.sample.id,
+    hall_id: Hall.all.sample.id,
+    start_time: DateTime.current.beginning_of_minute + rand(14).days + rand(24).hours + rand(60).minutes,
+    price: rand(15..24)
+  )
 end
