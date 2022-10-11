@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  include DeviseTokenAuth::Concerns::User
   has_many :reservations, dependent: :destroy
 
   devise :database_authenticatable, :registerable,
@@ -12,6 +13,6 @@ class User < ApplicationRecord
   def validate_password_length
     return unless password.nil? || password.bytesize > 72
 
-    errors.add(:password, 'Password is too long')
+    errors.add(:password, 'is too long')
   end
 end
