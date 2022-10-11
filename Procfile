@@ -1,4 +1,4 @@
-web: bundle exec rails server -p $PORT
+web: bin/rails server -p 3000
 css: yarn build:css --watch
 js: yarn build --watch
 worker: bundle exec sidekiq
