@@ -25,3 +25,10 @@ end
     price: rand(15..24)
   )
 end
+
+(1..5).each do |tickets_needed|
+  Discount.create(
+    tickets_needed: tickets_needed * 2,
+    value: tickets_needed * 5
+  )
+end

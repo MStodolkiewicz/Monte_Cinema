@@ -54,8 +54,9 @@ class ReservationsController < ApplicationController
   def create
     authorize Reservation
     @reservation = Reservation.new(reservation_params)
-    update_reservation_user if current_user.present?
+
     seance_and_seats_valid?
+    update_user_and_discount
 
     Reservation.transaction do
       @reservation.save!
@@ -96,6 +97,20 @@ class ReservationsController < ApplicationController
     raise SeatsDuplicatedError if @reservation.seats.detect { |distinct| @reservation.seats.count(distinct) > 1 }
   end
 
+  def update_user_and_discount
+    update_reservation_user if current_user.present?
+    link_discount
+  end
+
+  def link_discount
+    @reservation.discount_id = largest_matching_discount(@reservation.seats.count)
+  end
+
+  def largest_matching_discount(tickets_needed)
+    Discount.where(tickets_needed: ..tickets_needed)
+            .order(tickets_needed: :desc).pluck(:id).first
+  end
+
   def params_for_form(seance_id)
     taken_seats(seance_id)
     @capacity = Seance.where(id: seance_id)
@@ -126,13 +141,13 @@ class ReservationsController < ApplicationController
 
   def reservations_for_user(user_id)
     @reservations = Reservation.where(user_id:)
-                               .joins(:seance).includes({ seance: [:movie] })
+                               .joins(:seance).includes({ seance: [:movie] }, :discount)
                                .order(start_time: :desc)
   end
 
   def reservations_for_seance(seance_id)
     Reservation.where(seance_id:)
-               .includes({ seance: [:movie] })
+               .includes({ seance: [:movie] }, :discount)
   end
 
   def change_status(status)
