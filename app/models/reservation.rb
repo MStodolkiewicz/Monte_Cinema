@@ -1,6 +1,7 @@
 class Reservation < ApplicationRecord
   belongs_to :seance
   belongs_to :user, optional: true
+  belongs_to :discount, optional: true
   has_many :tickets, dependent: :destroy
 
   validates :status, presence: true

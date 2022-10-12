@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_05_121427) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_05_163809) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -44,6 +44,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_05_121427) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "seats", array: true
+    t.bigint "discount_id"
+    t.index ["discount_id"], name: "index_reservations_on_discount_id"
     t.index ["seance_id"], name: "index_reservations_on_seance_id"
     t.index ["user_id"], name: "index_reservations_on_user_id"
   end
@@ -81,6 +83,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_05_121427) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "reservations", "discounts"
   add_foreign_key "reservations", "seances"
   add_foreign_key "reservations", "users"
   add_foreign_key "seances", "halls"

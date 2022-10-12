@@ -24,4 +24,11 @@
     <%= reservation.seats %>
   </p>
 
+  <% if reservation.discount_id.present?%>
+    <p>
+      <strong>Snack bar discount:</strong>
+      <%= "#{reservation.discount.value}%" %>
+    </p>
+  <% end %>
+
 </div>
