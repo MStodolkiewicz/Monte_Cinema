@@ -1,24 +1,39 @@
-# README
+## MonteCinema
+MonteCinema is an application for making cinema reservations and managing them.
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Dependencies
 
-Things you may want to cover:
+- Ruby 3.1.2
+- Rails 7.0.3
+- Redis 4.8
+- PostgreSQL 14.5
+- Sidekiq 6.5
 
-* Ruby version
+## Getting the application up and running
 
-* System dependencies
+- Clone repository and run bundle install
+`$ git clone https://github.com/danyflorczak/Monte_Cinema.git`
 
-* Configuration
+`$ bundle install`
 
-* Database creation
+- Make sure the postgresql service and redis server are running.
+  If you don't have those you can simply install them as said in:
+  * postgresql - https://wiki.postgresql.org/wiki/Homebrew
+  * redis      - https://redis.io/docs/getting-started/installation/
 
-* Database initialization
+- Create database:
+`$ rails db:create`
+`$ rails db:migrate`
 
-* How to run the test suite
+- If you want you can fill it with seeds with:
+`$ rails db:seed`
 
-* Services (job queues, cache servers, search engines, etc.)
+- To run the server simply type:
+`$ bin/dev`
 
-* Deployment instructions
-
-* ...
+- Run Tests with:
+`$ rspec`                         - for all tests
+`$ rspec spec/[folder/file_path]` - for specific tests 
+ 
+## Application is currently deployed on Heroku:
+`https://montecinemams.herokuapp.com/`
