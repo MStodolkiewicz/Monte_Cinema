@@ -1,0 +1,8 @@
+<h1> MonteCinema! </h1>
+
+<h2> You booked a reservation: </h2>
+
+<h4> Movie: <%= @reservation.seance.movie.name %> </h4>
+<h4> Starts at: <%= format_date(@reservation.seance.start_time) %> </h4>
+<h4> Hall: <%= @reservation.seance.hall.name %> </h4>
+<h4> Seats: <%= @reservation.seats.join(", ") %> </h4>

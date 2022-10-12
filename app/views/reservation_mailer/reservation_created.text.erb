@@ -1,0 +1,8 @@
+MonteCinema!
+
+You booked a reservation:
+
+Movie: <%= @reservation.seance.movie.name %> 
+Starts at: <%= format_date(@reservation.seance.start_time) %> 
+Hall: <%= @reservation.seance.hall.name %>
+Seats: <%= @reservation.seats %>
