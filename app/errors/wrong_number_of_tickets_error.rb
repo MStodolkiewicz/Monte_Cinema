@@ -1,0 +1,1 @@
+class WrongNumberOfTicketsError < StandardError; end

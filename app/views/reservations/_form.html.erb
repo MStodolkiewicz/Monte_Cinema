@@ -13,10 +13,12 @@
 
   <%= form.hidden_field :seance_id %>
 
-  <div>
-    <%= form.label :email, style: "display: block" %>
-    <%= form.text_field :email %>
-  </div>
+  <% if !current_user.present? %>
+    <div>
+      <%= form.label :email, style: "display: block" %>
+      <%= form.text_field :email %>
+    </div>
+    <% end %>
 
   <p>
     <strong>Hall seats:</strong>
@@ -38,7 +40,13 @@
   </div>
 
   <div style="margin-top: 1%">
-    <%= form.submit class: 'btn btn-outline-success'%>
+    <% if !current_user.present? %>
+      <%= form.submit "Make a reservation", formaction: create_as_guest_reservations_path, class: "btn btn-outline-success" %>
+    <% elsif current_user.manager? %>
+      <%= form.submit "Make a reservation", formaction: create_as_manager_reservations_path, class: "btn btn-outline-success" %>
+    <%else%>
+      <%= form.submit "Make a reservation", class: "btn btn-outline-success" %>
+    <%end%>
   </div>
   
   <div>
@@ -53,7 +61,7 @@
 <script>
   var count = 1;
   document.getElementById("newSeat").onclick = function(){
-    if (count < 15){
+    if (count < 10){
       document.getElementById("seats").appendChild(document.getElementById("seat").cloneNode(true));
       count++;
     }
