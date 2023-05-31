@@ -12,7 +12,7 @@ MonteCinema is an application for making cinema reservations and managing them.
 ## Getting the application up and running
 
 - Clone repository and run bundle install
-`$ git clone https://github.com/danyflorczak/Monte_Cinema.git`
+`$ git clone git@github.com:MStodolkiewicz/Monte_Cinema.git`
 
 `$ bundle install`
 
