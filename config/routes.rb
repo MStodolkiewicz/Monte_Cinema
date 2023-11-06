@@ -17,6 +17,8 @@ Rails.application.routes.draw do
     collection do
       get '/find_by_user', to: "reservations#find_by_user"
       get '/find_by_seance', to: "reservations#find_by_seance"
+      post 'create_as_manager', to: 'reservations#create_as_manager'
+      post 'create_as_guest', to: 'reservations#create_as_guest'
     end
     patch 'cancel', on: :member
     patch 'confirm', on: :member
